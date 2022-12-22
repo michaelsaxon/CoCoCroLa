@@ -64,3 +64,16 @@ to generate output analysis files, `results_en.csv`, `results_self.csv`, `result
 
 For any of the above, please file an issue or email me directly: [saxon@ucsb.edu](mailto:saxon@ucsb.edu)
 
+## Citation:
+
+```
+@unpublished{              
+saxon2022multilingual,              
+title={Multilingual Conceptual Coverage in Text-to-Image Models},              
+author={Michael Saxon,William Yang Wang},              
+journal={OpenReview Preprint},              
+year={2022},              
+url={https://openreview.net/forum?id=5H2m3tCEaQ},
+note={preprint under review}          
+}
+```
