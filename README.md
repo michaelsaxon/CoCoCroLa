@@ -1,20 +1,6 @@
 # CoCoCroLa: Conceptual Coverage Across Languages Benchmark
 
-The Conceptual Coverage Across Languages Benchmark for Text-to-Image Models
-
-Citation:
-
-```
-@unpublished{              
-saxon2022multilingual,              
-title={Multilingual Conceptual Coverage in Text-to-Image Models},              
-author={Michael Saxon,William Yang Wang},              
-journal={OpenReview Preprint},              
-year={2022},              
-url={https://openreview.net/forum?id=5H2m3tCEaQ},
-note={preprint under review}          
-}
-```
+### [\[Demo Link\]](https://saxon.me/coco-crola)
 
 ### Package currently under cleaning and construction.
 
