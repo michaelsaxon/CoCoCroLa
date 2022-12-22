@@ -17,7 +17,7 @@ cococrola/evaluate/evaluate_folder.py
 
 The CoCo-CroLa v0.1 concept list is contained in `concepts.csv`. Each row contains the concept in the language signified by its corresponding column. To convert a translated concept word into the CCCL v0.1 prompts, replace `###` in its language's prompt (located in `prompts.json`).
 
-To use `evaluate_folder.py`, run your model on each concept,language pair n times (recommended n>=10) and name each file according to the format: `{[concept.csv line number] - 2}-{language}-{english concept name}-{}.png`
+To use `evaluate_folder.py`, run your model on each concept,language pair n times (recommended n>=10) and name each file according to the format: `{[concept.csv line number] - 2}-{language}-{english concept name}-{i}.png`
 
 For example, the second image generated for german for the concept "mother" (concept number 15), the filename will be `14-de-mother-2.png`.
 
