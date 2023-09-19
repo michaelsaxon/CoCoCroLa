@@ -18,7 +18,8 @@ setup(name='CoCoCroLa',
         # 'cogview' : ['git+https://github.com/Sleepychord/Image-Local-Attention.git'],
         # https://github.com/THUDM/CogView2/tree/main
         'figures' : ['seaborn'],
-        'openai' : ['openai']
+        'openai' : ['openai'],
+        'creator' : ['babelnet', 'translators']
     },
     entry_points={
         'console_scripts': [
