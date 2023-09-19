@@ -6,7 +6,8 @@ import json
 
 import diffusers
 
-@click.command(cls=CommandWithConfigFile('../config/generate.yaml'))
+#@click.command(cls=CommandWithConfigFile('../config/generate.yaml'))
+@click.command()
 @click.option('--output_dir')
 @click.option('--n_predictions', default=9)
 @click.option('--split_batch', default=1)
