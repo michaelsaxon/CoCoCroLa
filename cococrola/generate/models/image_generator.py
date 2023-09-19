@@ -1,9 +1,9 @@
-import PIL
+from PIL import Image
 from typing import List
 
 class ImageGenerator():
     def __init__(self) -> None:
         raise NotImplementedError
 
-    def generate(self, prompt: str, num_img: int = 9) -> List[PIL.Image]:
+    def generate(self, prompt: str, num_img: int = 9) -> List[Image.Image]:
         raise NotImplementedError
