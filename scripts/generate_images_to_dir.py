@@ -28,7 +28,7 @@ def main(output_dir, n_predictions, split_batch, model_id, input_csv, prompts_ba
 
     # put this into cococrola.utils.simple_csv
     words = open(input_csv, "r").readlines()
-    index = prompts_base[0].strip().split(",")
+    index = words[0].strip().split(",")
     print(index)
     lang_prompt_templates = json.load(open(prompts_base, "r"))
 
