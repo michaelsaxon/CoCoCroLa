@@ -42,6 +42,7 @@ def main(output_dir, n_predictions, split_batch, model_id, input_csv, prompts_ba
             # build a prompt based on the above templates from the 
             prompt = lang_prompt_templates[index[idx]].replace("$$$", line[idx])
             print(idx)
+            print(prompt)
             print(f"generating {index[idx]}:{line[0]}, '{line[idx]}'")
             images = generator.generate(prompt)
             for i, im in enumerate(images):
