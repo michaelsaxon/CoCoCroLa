@@ -33,7 +33,7 @@ def main(output_dir, n_predictions, split_batch, model_id, input_csv, prompts_ba
 
     # this could be put into a new generate_save_images function
     # inputs prompts_base, lang_prompt_templates, generator, output_dir, start_line
-    for line_idx in range(start_line, len(prompts_base)):
+    for line_idx in range(start_line, len(words)):
         line = words[line_idx]
         line_no = line_idx - 1
         line = line.strip().split(",")
