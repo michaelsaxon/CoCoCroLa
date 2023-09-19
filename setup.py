@@ -1,4 +1,4 @@
-"""from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(name='CoCoCroLa',
     version='0.1',
@@ -6,7 +6,8 @@ setup(name='CoCoCroLa',
     url='https://github.com/michaelsaxon/CoCoCroLa',
     author='Michael Saxon',
     author_email='saxon@ucsb.edu',
-    packages=['cococrola'],
+    packages=find_packages(include=['cococrola', 'cococrola.*']),
+    python_requires='>=3.8',
     install_requires=[
         'diffusers',
         'transformers',
@@ -14,8 +15,10 @@ setup(name='CoCoCroLa',
         'click'
     ],
     extras_require={
-        'cogview' : ['git+https://github.com/Sleepychord/Image-Local-Attention.git'],
-        'figures' : ['seaborn']
+        # 'cogview' : ['git+https://github.com/Sleepychord/Image-Local-Attention.git'],
+        # https://github.com/THUDM/CogView2/tree/main
+        'figures' : ['seaborn'],
+        'openai' : ['openai']
     },
     entry_points={
         'console_scripts': [
@@ -24,4 +27,3 @@ setup(name='CoCoCroLa',
         ]
     },    zip_safe=False
 )
-"""
