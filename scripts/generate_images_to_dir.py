@@ -29,7 +29,7 @@ def main(output_dir, n_predictions, split_batch, model_id, input_csv, prompts_ba
     # put this into cococrola.utils.simple_csv
     prompts_base = open(input_csv, "r").readlines()
     index = prompts_base[0].strip().split(",")
-    lang_prompt_templates = json.load(prompts_base)
+    lang_prompt_templates = json.load(open(prompts_base, "r"))
 
     # this could be put into a new generate_save_images function
     # inputs prompts_base, lang_prompt_templates, generator, output_dir, start_line
