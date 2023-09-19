@@ -6,7 +6,7 @@ from typing import List, Type
 
 from tqdm import tqdm
 
-from cococrola.generate.image_generator import ImageGenerator
+from cococrola.generate.models.image_generator import ImageGenerator
 
 
 class DiffusersImageGenerator(ImageGenerator):
