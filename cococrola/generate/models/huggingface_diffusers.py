@@ -16,6 +16,7 @@ class DiffusersImageGenerator(ImageGenerator):
         self.pipe.to(device)
 
     def generate(self, prompt: str, guidance_scale : float = 7.5, num_img: int = 9) -> List[Image.Image]:
+        images = []
         with autocast(self.device):
             images += self.pipe(prompt, guidance_scale = guidance_scale, num_images_per_prompt = num_img).images
         return images
