@@ -38,15 +38,17 @@ def main(output_dir, n_predictions, split_batch, model_id, input_csv, prompts_ba
         line = words[line_idx]
         line_no = line_idx - 1
         line = line.strip().split(",")
-        for idx in range(len(index)):
-            # build a prompt based on the above templates from the 
-            print(idx)
-            prompt = lang_prompt_templates[index[idx]].replace("$$$", line[idx])
+        for lang_idx in range(len(index)):
+            # build a prompt based on the language-specific prompt templates
+            print(lang_idx)
+            prompt = lang_prompt_templates[index[lang_idx]].replace("$$$", line[lang_idx])
             print(prompt)
-            print(f"generating {index[idx]}:{line[0]}, '{line[idx]}'")
+            print(f"generating {index[lang_idx]}:{line[0]}, '{line[lang_idx]}'")
+            # fix the concept-level seed based on the csv line we're on (same starting seed for each lang)
+            generator.update_noise_generator(seed = line_no)
             images = generator.generate(prompt)
             for i, im in enumerate(images):
-                fname = f"{line_no}-{index[idx]}-{line[0]}-{i}.png"
+                fname = f"{line_no}-{index[lang_idx]}-{line[0]}-{i}.png"
                 print(f"saving image {fname}...")
                 im.save(f"{output_dir}/{fname}")
 

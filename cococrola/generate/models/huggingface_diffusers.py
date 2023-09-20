@@ -2,21 +2,43 @@ import torch
 from PIL import Image
 from torch import autocast
 from diffusers import DiffusionPipeline, StableDiffusionPipeline
-from typing import List, Type
+from typing import List, Type, Optional, Union
 
 from tqdm import tqdm
 
 from cococrola.generate.models.image_generator import ImageGenerator
 
+'''
+Functionality to add:
+- [ ] set beginning of run seed to be the same for each language 
+- [ ] switch seed midway through generation (requires modification to level Kexun dev was on)
+- [ ] switch conditioning prompt midway through generation
+'''
+
 
 class DiffusersImageGenerator(ImageGenerator):
-    def __init__(self, model_id, device, pipeline_type : Type[DiffusionPipeline] = StableDiffusionPipeline) -> None:
+    def __init__(
+            self, 
+            model_id : str, 
+            device : str, 
+            pipeline_type : Type[DiffusionPipeline] = StableDiffusionPipeline,
+            seed :Optional[int] = None
+            ) -> None:
         self.pipe = pipeline_type.from_pretrained(model_id)
         self.device = device
         self.pipe.to(device)
+        self.noise_generator = torch.Generator(device = device)
+        if seed != None:
+            self.noise_generator = self.noise_generator.manual_seed(seed)
+
+    def update_noise_generator(self, seed : int = 0) -> None:
+        if self.noise_generator == None:
+            raise UserWarning("Updating noise generator that hasn't been instantiated. Nothing happened.")
+        else:
+            self.noise_generator = self.noise_generator.manual_seed(seed)
 
     def generate(self, prompt: str, guidance_scale : float = 7.5, num_img: int = 9) -> List[Image.Image]:
         images = []
         with autocast(self.device):
-            images += self.pipe(prompt, guidance_scale = guidance_scale, num_images_per_prompt = num_img).images
+            images += self.pipe(prompt, guidance_scale = guidance_scale, num_images_per_prompt = num_img, generator = self.noise_generator).images
         return images
