@@ -12,13 +12,15 @@ setup(name='CoCoCroLa',
         'diffusers',
         'transformers',
         'torch',
-        'click'
+        'click',
+        'numpy'
     ],
     extras_require={
         # 'cogview' : ['git+https://github.com/Sleepychord/Image-Local-Attention.git'],
         # https://github.com/THUDM/CogView2/tree/main
         'figures' : ['seaborn'],
         'openai' : ['openai'],
+        'craiyon' : ['dalle-mini'],
         'creator' : ['babelnet', 'translators']
     },
     entry_points={

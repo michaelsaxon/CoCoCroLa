@@ -16,7 +16,8 @@ import diffusers
 @click.option('--prompts_base', default="../benchmark/v0-1/prompts.json")
 @click.option('--start_line', default=1)
 @click.option('--device', default="cuda")
-def main(output_dir, n_predictions, split_batch, model_id, input_csv, prompts_base, start_line, device):
+@click.option('--global_seed_fudge', default=0)
+def main(output_dir, n_predictions, split_batch, model_id, input_csv, prompts_base, start_line, device, global_seed_fudge):
     assert n_predictions % split_batch == 0
 
     if model_id == "BAAI/AltDiffusion-m9":
@@ -29,7 +30,6 @@ def main(output_dir, n_predictions, split_batch, model_id, input_csv, prompts_ba
     # put this into cococrola.utils.simple_csv
     words = open(input_csv, "r").readlines()
     index = words[0].strip().split(",")
-    print(index)
     lang_prompt_templates = json.load(open(prompts_base, "r"))
 
     # this could be put into a new generate_save_images function
@@ -40,12 +40,10 @@ def main(output_dir, n_predictions, split_batch, model_id, input_csv, prompts_ba
         line = line.strip().split(",")
         for lang_idx in range(len(index)):
             # build a prompt based on the language-specific prompt templates
-            print(lang_idx)
             prompt = lang_prompt_templates[index[lang_idx]].replace("$$$", line[lang_idx])
-            print(prompt)
             print(f"generating {index[lang_idx]}:{line[0]}, '{line[lang_idx]}'")
             # fix the concept-level seed based on the csv line we're on (same starting seed for each lang)
-            generator.update_noise_generator(seed = line_no)
+            generator.update_noise_generator(seed = line_no + global_seed_fudge)
             images = generator.generate(prompt)
             for i, im in enumerate(images):
                 fname = f"{line_no}-{index[lang_idx]}-{line[0]}-{i}.png"

@@ -7,3 +7,6 @@ class ImageGenerator():
 
     def generate(self, prompt: str, num_img: int = 9) -> List[Image.Image]:
         raise NotImplementedError
+
+    def update_noise_generator(self, seed : int = 0) -> None:
+        raise NotImplementedError

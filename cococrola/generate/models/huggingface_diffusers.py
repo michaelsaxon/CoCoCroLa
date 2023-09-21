@@ -10,7 +10,7 @@ from cococrola.generate.models.image_generator import ImageGenerator
 
 '''
 Functionality to add:
-- [ ] set beginning of run seed to be the same for each language 
+- [x] set beginning of run seed to be the same for each language 
 - [ ] switch seed midway through generation (requires modification to level Kexun dev was on)
 - [ ] switch conditioning prompt midway through generation
 '''
