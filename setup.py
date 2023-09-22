@@ -20,7 +20,7 @@ setup(name='CoCoCroLa',
         # https://github.com/THUDM/CogView2/tree/main
         'figures' : ['seaborn'],
         'altdiffusion' : ['sentencepiece'],
-        'openai' : ['openai'],
+        'openai' : ['openai', 'backoff'],
         'craiyon' : ['dalle-mini', 'jaxlib==0.3.25', 'vqgan-jax @ git+https://github.com/patil-suraj/vqgan-jax.git'],
         'creator' : ['babelnet', 'translators']
     },

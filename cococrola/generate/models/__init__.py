@@ -13,27 +13,14 @@ MODEL_MAP_CRAIYON = {
     'CMG' : "mega"
 }
 
-SUPPORTED_MODELS = sum([list(MODEL_MAP_DIFFUSERS.keys()), list(MODEL_MAP_CRAIYON.keys())], [])
+MODEL_MAP_OPENAI = {
+    'DE2' : "dalle-2"
+}
+
+SUPPORTED_MODELS = sum([list(MODEL_MAP_DIFFUSERS.keys()), list(MODEL_MAP_CRAIYON.keys()), list(MODEL_MAP_OPENAI.keys())], [])
 
 
-# to_add : [ 'SD2-1', 'CV2', 'DE2' ]
-
-'''
-def get_generator(model_code : str, device : str):
-    if model_code not in SUPPORTED_MODELS:
-        raise ValueError(f"Model code {model_code} not supported. Supported models are {SUPPORTED_MODELS}")
-    if model_code in MODEL_MAP_DIFFUSERS:
-        import diffusers
-        from cococrola.generate.models.huggingface_diffusers import DiffusersImageGenerator
-        if model_code == 'AD':
-            pipeline_type = diffusers.AltDiffusionPipeline
-        else:
-            pipeline_type = diffusers.StableDiffusionPipeline
-        return DiffusersImageGenerator(MODEL_MAP_DIFFUSERS[model_code], device, pipeline_type)
-    elif model_code in MODEL_MAP_CRAIYON:
-        from cococrola.generate.models.craiyon import CraiyonImageGenerator
-        return CraiyonImageGenerator(MODEL_MAP_CRAIYON[model_code])
-'''
+# to_add : [ 'CV2',]
 
 
 def get_generator(model_code : str, device : str):
@@ -51,3 +38,6 @@ def get_generator(model_code : str, device : str):
     elif model_code in MODEL_MAP_CRAIYON:
         from cococrola.generate.models.craiyon import CraiyonImageGenerator
         return CraiyonImageGenerator(MODEL_MAP_CRAIYON[model_code])
+    elif model_code in MODEL_MAP_OPENAI:
+        from cococrola.generate.models.openai import OpenAIImageGenerator
+        return OpenAIImageGenerator()
