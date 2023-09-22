@@ -24,10 +24,10 @@ def get_generator(model_code : str, device : str):
     if model_code in MODEL_MAP_DIFFUSERS:
         from cococrola.generate.models.huggingface_diffusers import DiffusersImageGenerator
         if model_code == 'AD':
-            from cococrola.generate.models.patches.diffusers import AltDiffusionPipelineMidwayPatch
+            from cococrola.generate.models.patches.diffusers.pipeline_alt_diffusion import AltDiffusionPipelineMidwayPatch
             pipeline_type = AltDiffusionPipelineMidwayPatch
         else:
-            from cococrola.generate.models.patches.diffusers import StableDiffusionPipelineMidwayPatch
+            from cococrola.generate.models.patches.diffusers.pipeline_stable_diffusion import StableDiffusionPipelineMidwayPatch
             pipeline_type = StableDiffusionPipelineMidwayPatch
         return DiffusersImageGenerator(MODEL_MAP_DIFFUSERS[model_code], device, pipeline_type)
     elif model_code in MODEL_MAP_CRAIYON:

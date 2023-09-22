@@ -1,2 +1,0 @@
-from pipeline_alt_diffusion import AltDiffusionPipelineMidwayPatch
-from pipeline_stable_diffusion import StableDiffusionPipelineMidwayPatch
