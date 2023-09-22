@@ -15,10 +15,10 @@ from cococrola.utils.click_config import CommandWithConfigFile
 @click.option('--split_batch', type=int, default=1)
 @click.option('--input_csv', type=str, default="../benchmark/v0-1/concepts.csv")
 @click.option('--prompts_base', type=str, default="../benchmark/v0-1/prompts.json")
-@click.option('--start_line', type=str, default=1)
+@click.option('--start_line', type=int, default=1)
 @click.option('--device', type=str, default="cuda")
 @click.option('--global_seed_fudge', type=int, default=0)
-def main(output_dir, n_predictions, split_batch, model, input_csv, prompts_base, start_line, device, global_seed_fudge):
+def main(model, output_dir, n_predictions, split_batch, input_csv, prompts_base, start_line, device, global_seed_fudge):
     assert n_predictions % split_batch == 0
 
     generator = models.get_generator(model, device)
