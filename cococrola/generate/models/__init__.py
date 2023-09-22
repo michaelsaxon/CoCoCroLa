@@ -18,6 +18,7 @@ SUPPORTED_MODELS = sum([list(MODEL_MAP_DIFFUSERS.keys()), list(MODEL_MAP_CRAIYON
 
 # to_add : [ 'SD2-1', 'CV2', 'DE2' ]
 
+'''
 def get_generator(model_code : str, device : str):
     if model_code not in SUPPORTED_MODELS:
         raise ValueError(f"Model code {model_code} not supported. Supported models are {SUPPORTED_MODELS}")
@@ -28,6 +29,24 @@ def get_generator(model_code : str, device : str):
             pipeline_type = diffusers.AltDiffusionPipeline
         else:
             pipeline_type = diffusers.StableDiffusionPipeline
+        return DiffusersImageGenerator(MODEL_MAP_DIFFUSERS[model_code], device, pipeline_type)
+    elif model_code in MODEL_MAP_CRAIYON:
+        from cococrola.generate.models.craiyon import CraiyonImageGenerator
+        return CraiyonImageGenerator(MODEL_MAP_CRAIYON[model_code])
+'''
+
+
+def get_generator(model_code : str, device : str):
+    if model_code not in SUPPORTED_MODELS:
+        raise ValueError(f"Model code {model_code} not supported. Supported models are {SUPPORTED_MODELS}")
+    if model_code in MODEL_MAP_DIFFUSERS:
+        from cococrola.generate.models.huggingface_diffusers import DiffusersImageGenerator
+        if model_code == 'AD':
+            from cococrola.generate.models.patches.diffusers.pipeline_alt_diffusion import AltDiffusionPipelineMidwayPatch
+            pipeline_type = AltDiffusionPipelineMidwayPatch
+        else:
+            from cococrola.generate.models.patches.diffusers.pipeline_stable_diffusion import StableDiffusionPipelineMidwayPatch
+            pipeline_type = StableDiffusionPipelineMidwayPatch
         return DiffusersImageGenerator(MODEL_MAP_DIFFUSERS[model_code], device, pipeline_type)
     elif model_code in MODEL_MAP_CRAIYON:
         from cococrola.generate.models.craiyon import CraiyonImageGenerator
