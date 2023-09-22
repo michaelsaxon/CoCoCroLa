@@ -93,6 +93,8 @@ class StableDiffusionPipelineMidwayPatch(StableDiffusionPipeline):
         # Here we concatenate the unconditional and text embeddings into a single batch
         # to avoid doing two forward passes
         if do_classifier_free_guidance:
+            print(negative_prompt_embeds.shape)
+            print(prompt_embeds.shape)
             prompt_embeds = torch.cat([negative_prompt_embeds, prompt_embeds])
 
         # 4. Prepare timesteps
