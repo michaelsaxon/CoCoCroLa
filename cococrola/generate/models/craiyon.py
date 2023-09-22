@@ -108,7 +108,7 @@ class CraiyonImageGenerator(ImageGenerator):
         tokenized_prompt = replicate(tokenized_prompts)
 
         # get a new key
-        key, subkey = jax.random.split(key)
+        key, subkey = jax.random.split(self.key)
         # generate images
         encoded_images = self.p_generate(
             tokenized_prompt,
