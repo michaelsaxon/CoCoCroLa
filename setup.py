@@ -32,4 +32,4 @@ setup(name='CoCoCroLa',
 )
 
 # pip install jaxlib==0.3.25 -f https://storage.googleapis.com/jax-releases/jax_releases.html
-# , 'git+https://github.com/patil-suraj/vqgan-jax.git'
+# pip install jaxlib==0.3.25+cuda11.cudnn82 -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
