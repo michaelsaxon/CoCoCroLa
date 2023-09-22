@@ -133,7 +133,7 @@ class StableDiffusionPipelineMidwayPatch(StableDiffusionPipeline):
                         else:
                             print("Swapping prompt!")
                             # swapping prompt to other prompt
-                            prompt_embeds, negative_prompt_embeds = self.encode_prompt(
+                            prompt_embeds, _ = self.encode_prompt(
                                 second_prompt,
                                 device,
                                 num_images_per_prompt,
