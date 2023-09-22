@@ -41,7 +41,6 @@ VQGAN_COMMIT_ID = "e93a26e7707683d349bf5d5c41c5b0ef69b677a9"
 class CraiyonImageGenerator(ImageGenerator):
     def __init__(
             self, 
-            device : str, 
             model_size : str = "mega", 
             seed : int = 0
             ) -> None:

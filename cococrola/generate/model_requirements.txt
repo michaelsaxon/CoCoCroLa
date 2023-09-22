@@ -12,6 +12,12 @@ flax
 functools
 numpy
 click
+'''# Required only for colab environments + GPU
+!pip install jax==0.3.25 jaxlib==0.3.25 -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+
+# Install required libraries
+!pip install -q dalle-mini
+!pip install -q git+https://github.com/patil-suraj/vqgan-jax.git'''
 # stable diffusion/altdiffusion/etc (based on the diffusers package)
 diffusers
 torch

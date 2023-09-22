@@ -1,29 +1,28 @@
-from cococrola.generate.models.huggingface_diffusers import DiffusersImageGenerator
-from cococrola.utils.click_config import CommandWithConfigFile
-import click
 import os
 import json
 
-import diffusers
+import click
+
+from cococrola.generate import models
+from cococrola.utils.click_config import CommandWithConfigFile
+
 
 #@click.command(cls=CommandWithConfigFile('../config/generate.yaml'))
 @click.command()
-@click.option('--output_dir')
-@click.option('--n_predictions', default=9)
-@click.option('--split_batch', default=1)
-@click.option('--model_id', default="CompVis/stable-diffusion-v1-4")
-@click.option('--input_csv', default="../benchmark/v0-1/concepts.csv")
-@click.option('--prompts_base', default="../benchmark/v0-1/prompts.json")
-@click.option('--start_line', default=1)
-@click.option('--device', default="cuda")
-@click.option('--global_seed_fudge', default=0)
-def main(output_dir, n_predictions, split_batch, model_id, input_csv, prompts_base, start_line, device, global_seed_fudge):
+@click.option('--model', type=click.Choice(models.SUPPORTED_MODELS, case_sensitive=False), required=True, default="SD2")
+@click.option('--output_dir', type=str, required=True)
+@click.option('--n_predictions', type=int, default=9)
+@click.option('--split_batch', type=int, default=1)
+@click.option('--model_id', type=str, default="CompVis/stable-diffusion-v1-4")
+@click.option('--input_csv', type=str, default="../benchmark/v0-1/concepts.csv")
+@click.option('--prompts_base', type=str, default="../benchmark/v0-1/prompts.json")
+@click.option('--start_line', type=str, default=1)
+@click.option('--device', type=str, default="cuda")
+@click.option('--global_seed_fudge', type=int, default=0)
+def main(output_dir, n_predictions, split_batch, model, input_csv, prompts_base, start_line, device, global_seed_fudge):
     assert n_predictions % split_batch == 0
 
-    if model_id == "BAAI/AltDiffusion-m9":
-        generator = DiffusersImageGenerator(model_id, device, pipeline_type = diffusers.AltDiffusionPipeline)
-    else:    
-        generator = DiffusersImageGenerator(model_id, device, pipeline_type = diffusers.StableDiffusionPipeline)
+    generator = models.get_generator(model, device)
 
     os.makedirs(output_dir, exist_ok=True)
 

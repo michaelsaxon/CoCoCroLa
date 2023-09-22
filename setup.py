@@ -9,9 +9,9 @@ setup(name='CoCoCroLa',
     packages=find_packages(include=['cococrola', 'cococrola.*']),
     python_requires='>=3.8',
     install_requires=[
+        'torch',
         'diffusers',
         'transformers',
-        'torch',
         'click',
         'numpy'
     ],
@@ -20,7 +20,7 @@ setup(name='CoCoCroLa',
         # https://github.com/THUDM/CogView2/tree/main
         'figures' : ['seaborn'],
         'openai' : ['openai'],
-        'craiyon' : ['dalle-mini'],
+        'craiyon' : ['dalle-mini', 'jaxlib==0.3.25', 'vqgan-jax @ git+https://github.com/patil-suraj/vqgan-jax.git'],
         'creator' : ['babelnet', 'translators']
     },
     entry_points={
@@ -30,3 +30,6 @@ setup(name='CoCoCroLa',
         ]
     },    zip_safe=False
 )
+
+# pip install jaxlib==0.3.25 -f https://storage.googleapis.com/jax-releases/jax_releases.html
+# , 'git+https://github.com/patil-suraj/vqgan-jax.git'
