@@ -31,4 +31,4 @@ def get_generator(model_code : str, device : str):
         return DiffusersImageGenerator(MODEL_MAP_DIFFUSERS[model_code], device, pipeline_type)
     elif model_code in MODEL_MAP_CRAIYON:
         from cococrola.generate.models.craiyon import CraiyonImageGenerator
-        return CraiyonImageGenerator(MODEL_MAP_CRAIYON[model_code], device)
+        return CraiyonImageGenerator(MODEL_MAP_CRAIYON[model_code])
