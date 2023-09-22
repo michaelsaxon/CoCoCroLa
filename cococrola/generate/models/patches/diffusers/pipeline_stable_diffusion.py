@@ -142,6 +142,8 @@ class StableDiffusionPipelineMidwayPatch(StableDiffusionPipeline):
                                 lora_scale=text_encoder_lora_scale,
                             )
                             if do_classifier_free_guidance:
+                                print(negative_prompt_embeds.shape)
+                                print(prompt_embeds.shape)
                                 prompt_embeds = torch.cat([negative_prompt_embeds, prompt_embeds])
                             print(second_prompt)
                             print(prompt_embeds.shape)
