@@ -9,6 +9,21 @@ from diffusers import StableDiffusionPipeline
 from diffusers.pipelines.stable_diffusion.pipeline_output import StableDiffusionPipelineOutput
 
 
+# Copied from diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion.rescale_noise_cfg
+def rescale_noise_cfg(noise_cfg, noise_pred_text, guidance_rescale=0.0):
+    """
+    Rescale `noise_cfg` according to `guidance_rescale`. Based on findings of [Common Diffusion Noise Schedules and
+    Sample Steps are Flawed](https://arxiv.org/pdf/2305.08891.pdf). See Section 3.4
+    """
+    std_text = noise_pred_text.std(dim=list(range(1, noise_pred_text.ndim)), keepdim=True)
+    std_cfg = noise_cfg.std(dim=list(range(1, noise_cfg.ndim)), keepdim=True)
+    # rescale the results from guidance (fixes overexposure)
+    noise_pred_rescaled = noise_cfg * (std_text / std_cfg)
+    # mix with the original results from guidance by factor guidance_rescale to avoid "plain looking" images
+    noise_cfg = guidance_rescale * noise_pred_rescaled + (1 - guidance_rescale) * noise_cfg
+    return noise_cfg
+
+
 class StableDiffusionPipelineMidwayPatch(StableDiffusionPipeline):
     @torch.no_grad()
     def __call__(
@@ -32,6 +47,7 @@ class StableDiffusionPipelineMidwayPatch(StableDiffusionPipeline):
         callback: Optional[Callable[[int, int, torch.FloatTensor], None]] = None,
         callback_steps: int = 1,
         cross_attention_kwargs: Optional[Dict[str, Any]] = None,
+        guidance_rescale: float = 0.0,
     ):
         # 0. Default height and width to unet
         height = height or self.unet.config.sample_size * self.vae_scale_factor
@@ -128,6 +144,15 @@ class StableDiffusionPipelineMidwayPatch(StableDiffusionPipeline):
                     cross_attention_kwargs=cross_attention_kwargs,
                     return_dict=False,
                 )[0]
+
+                # perform guidance
+                if do_classifier_free_guidance:
+                    noise_pred_uncond, noise_pred_text = noise_pred.chunk(2)
+                    noise_pred = noise_pred_uncond + guidance_scale * (noise_pred_text - noise_pred_uncond)
+
+                if do_classifier_free_guidance and guidance_rescale > 0.0:
+                    # Based on 3.4. in https://arxiv.org/pdf/2305.08891.pdf
+                    noise_pred = rescale_noise_cfg(noise_pred, noise_pred_text, guidance_rescale=guidance_rescale)
 
                 # compute the previous noisy sample x_t -> x_t-1
                 latents = self.scheduler.step(noise_pred, t, latents, **extra_step_kwargs, return_dict=False)[0]
