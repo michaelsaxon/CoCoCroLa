@@ -12,6 +12,7 @@ from cococrola.generate.models.image_generator import ImageGenerator
 Functionality to add:
 - [x] set beginning of run seed to be the same for each language 
 - [ ] switch seed midway through generation (requires modification to level Kexun dev was on)
+    - [ ] write a general pipeline function in a patch part
 - [ ] switch conditioning prompt midway through generation
 '''
 

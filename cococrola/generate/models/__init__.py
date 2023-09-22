@@ -22,12 +22,13 @@ def get_generator(model_code : str, device : str):
     if model_code not in SUPPORTED_MODELS:
         raise ValueError(f"Model code {model_code} not supported. Supported models are {SUPPORTED_MODELS}")
     if model_code in MODEL_MAP_DIFFUSERS:
-        import diffusers
         from cococrola.generate.models.huggingface_diffusers import DiffusersImageGenerator
         if model_code == 'AD':
-            pipeline_type = diffusers.AltDiffusionPipeline
+            from cococrola.generate.models.patches.diffusers import AltDiffusionPipelineMidwayPatch
+            pipeline_type = AltDiffusionPipelineMidwayPatch
         else:
-            pipeline_type = diffusers.StableDiffusionPipeline
+            from cococrola.generate.models.patches.diffusers import StableDiffusionPipelineMidwayPatch
+            pipeline_type = StableDiffusionPipelineMidwayPatch
         return DiffusersImageGenerator(MODEL_MAP_DIFFUSERS[model_code], device, pipeline_type)
     elif model_code in MODEL_MAP_CRAIYON:
         from cococrola.generate.models.craiyon import CraiyonImageGenerator
