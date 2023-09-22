@@ -170,4 +170,4 @@ class AltDiffusionPipelineMidwayPatch(AltDiffusionPipeline):
         # Offload all models
         self.maybe_free_model_hooks()
 
-        return AltDiffusionPipelineOutput(images=image)
+        return AltDiffusionPipelineOutput(images=image, nsfw_content_detected=[False] * len(image))

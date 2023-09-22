@@ -170,4 +170,4 @@ class StableDiffusionPipelineMidwayPatch(StableDiffusionPipeline):
         # Offload all models
         self.maybe_free_model_hooks()
 
-        return StableDiffusionPipelineOutput(images=image)
+        return StableDiffusionPipelineOutput(images=image, nsfw_content_detected=[False] * len(image))
