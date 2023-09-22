@@ -19,6 +19,7 @@ setup(name='CoCoCroLa',
         # 'cogview' : ['git+https://github.com/Sleepychord/Image-Local-Attention.git'],
         # https://github.com/THUDM/CogView2/tree/main
         'figures' : ['seaborn'],
+        'altdiffusion' : ['sentencepiece'],
         'openai' : ['openai'],
         'craiyon' : ['dalle-mini', 'jaxlib==0.3.25', 'vqgan-jax @ git+https://github.com/patil-suraj/vqgan-jax.git'],
         'creator' : ['babelnet', 'translators']
