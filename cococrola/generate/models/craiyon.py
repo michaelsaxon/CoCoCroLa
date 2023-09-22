@@ -22,7 +22,6 @@ from PIL import Image
 from cococrola.generate.models.image_generator import ImageGenerator
 
 
-
 # dalle-mega
 DALLE_MODELS = {
     "mega" : "dalle-mini/dalle-mini/mega-1-fp16:latest",
@@ -36,6 +35,7 @@ DALLE_COMMIT_ID = None
 # VQGAN model
 VQGAN_REPO = "dalle-mini/vqgan_imagenet_f16_16384"
 VQGAN_COMMIT_ID = "e93a26e7707683d349bf5d5c41c5b0ef69b677a9"
+
 
 # DALLE mini/mega has been renamed to Craiyon
 class CraiyonImageGenerator(ImageGenerator):
@@ -88,11 +88,9 @@ class CraiyonImageGenerator(ImageGenerator):
         self.p_generate = p_generate
         self.p_decode = p_decode
 
-
     def update_noise_generator(self, seed : int = 0) -> None:
         self.seed = seed
         self.key = jax.random.PRNGKey(seed)
-
 
     def generate(
             self, 
@@ -125,3 +123,9 @@ class CraiyonImageGenerator(ImageGenerator):
         decoded_images = self.p_decode(encoded_images, self.vqgan_params)
         decoded_images = decoded_images.clip(0.0, 1.0).reshape((-1, 256, 256, 3))
         return [Image.fromarray(np.asarray(decoded_image * 255, dtype=np.uint8)) for decoded_image in decoded_images]
+
+    def generate_seed_change(self, prompt: str, seed_reset_step : int = 500, num_img: int = 9) -> List[Image.Image]:
+        raise AttributeError("Cannot do a mid-generate seed change, Craiyon models aren't diffusion models.")
+    
+    def generate_prompt_change(self, prompt: str, second_prompt: str, prompt_reset_step : int = 500, num_img: int = 9) -> List[Image.Image]:
+        raise AttributeError("Cannot do a mid-generate prompt change, Craiyon models aren't diffusion models.")

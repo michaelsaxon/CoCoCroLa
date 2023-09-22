@@ -11,16 +11,14 @@ from cococrola.utils.click_config import CommandWithConfigFile
 @click.command()
 @click.option('--model', type=click.Choice(models.SUPPORTED_MODELS, case_sensitive=False), required=True, default="SD2")
 @click.option('--output_dir', type=str, required=True)
-@click.option('--n_predictions', type=int, default=9)
+@click.option('--num_img', type=int, default=9)
 @click.option('--split_batch', type=int, default=1)
 @click.option('--input_csv', type=str, default="../benchmark/v0-1/concepts.csv")
 @click.option('--prompts_base', type=str, default="../benchmark/v0-1/prompts.json")
 @click.option('--start_line', type=int, default=1)
 @click.option('--device', type=str, default="cuda")
 @click.option('--global_seed_fudge', type=int, default=0)
-def main(model, output_dir, n_predictions, split_batch, input_csv, prompts_base, start_line, device, global_seed_fudge):
-    assert n_predictions % split_batch == 0
-
+def main(model, output_dir, num_img, split_batch, input_csv, prompts_base, start_line, device, global_seed_fudge):
     generator = models.get_generator(model, device)
 
     os.makedirs(output_dir, exist_ok=True)
@@ -42,7 +40,10 @@ def main(model, output_dir, n_predictions, split_batch, input_csv, prompts_base,
             print(f"generating {index[lang_idx]}:{line[0]}, '{line[lang_idx]}'")
             # fix the concept-level seed based on the csv line we're on (same starting seed for each lang)
             generator.update_noise_generator(seed = line_no + global_seed_fudge)
-            images = generator.generate(prompt)
+            if split_batch != 1:
+                images = generator.generate_split_batch(prompt, num_img, split_batch)
+            else:
+                images = generator.generate(prompt, num_img)
             for i, im in enumerate(images):
                 fname = f"{line_no}-{index[lang_idx]}-{line[0]}-{i}.png"
                 print(f"saving image {fname}...")
