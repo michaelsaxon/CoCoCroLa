@@ -13,7 +13,6 @@ from cococrola.utils.click_config import CommandWithConfigFile
 @click.option('--output_dir', type=str, required=True)
 @click.option('--n_predictions', type=int, default=9)
 @click.option('--split_batch', type=int, default=1)
-@click.option('--model_id', type=str, default="CompVis/stable-diffusion-v1-4")
 @click.option('--input_csv', type=str, default="../benchmark/v0-1/concepts.csv")
 @click.option('--prompts_base', type=str, default="../benchmark/v0-1/prompts.json")
 @click.option('--start_line', type=str, default=1)
