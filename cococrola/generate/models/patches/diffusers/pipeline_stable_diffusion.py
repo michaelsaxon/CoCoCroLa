@@ -49,6 +49,9 @@ class StableDiffusionPipelineMidwayPatch(StableDiffusionPipeline):
         cross_attention_kwargs: Optional[Dict[str, Any]] = None,
         guidance_rescale: float = 0.0,
     ):
+        do_reset = reset_step is not None
+        resetted = False
+
         # 0. Default height and width to unet
         height = height or self.unet.config.sample_size * self.vae_scale_factor
         width = width or self.unet.config.sample_size * self.vae_scale_factor
@@ -116,25 +119,28 @@ class StableDiffusionPipelineMidwayPatch(StableDiffusionPipeline):
         num_warmup_steps = len(timesteps) - num_inference_steps * self.scheduler.order
         with self.progress_bar(total=num_inference_steps) as progress_bar:
             for i, t in enumerate(timesteps):
-                print(t)
-                if t == reset_step:
-                    print("switching!")
-                    if second_prompt is None:
-                        generator = generator.manual_seed(random.randint(0, 1000000))
-                    else:
-                        print("Swapping prompt!")
-                        # swapping prompt to other prompt
-                        prompt_embeds, negative_prompt_embeds = self.encode_prompt(
-                            second_prompt,
-                            device,
-                            num_images_per_prompt,
-                            do_classifier_free_guidance,
-                            negative_prompt,
-                            prompt_embeds=second_prompt_embeds,
-                            negative_prompt_embeds=negative_prompt_embeds,
-                            lora_scale=text_encoder_lora_scale,
-                        )
-                        print("Prompt swapped!")
+                if do_reset and not resetted:
+                    # t counts down from 1000
+                    if t < reset_step:
+                        # this is the step we switch at
+                        print("switching!")
+                        if second_prompt is None:
+                            generator = generator.manual_seed(random.randint(0, 1000000))
+                        else:
+                            print("Swapping prompt!")
+                            # swapping prompt to other prompt
+                            prompt_embeds, negative_prompt_embeds = self.encode_prompt(
+                                second_prompt,
+                                device,
+                                num_images_per_prompt,
+                                do_classifier_free_guidance,
+                                negative_prompt,
+                                prompt_embeds=second_prompt_embeds,
+                                negative_prompt_embeds=negative_prompt_embeds,
+                                lora_scale=text_encoder_lora_scale,
+                            )
+                            print("Prompt swapped!")
+                        resetted = True
 
                 # expand the latents if we are doing classifier free guidance
                 latent_model_input = torch.cat([latents] * 2) if do_classifier_free_guidance else latents
