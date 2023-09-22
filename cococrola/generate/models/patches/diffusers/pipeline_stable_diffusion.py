@@ -111,6 +111,7 @@ class StableDiffusionPipelineMidwayPatch(StableDiffusionPipeline):
             generator,
             latents,
         )
+        print(prompt)
         print(prompt_embeds.shape)
 
         # 6. Prepare extra step kwargs. TODO: Logic should ideally just be moved out of the pipeline
@@ -140,6 +141,7 @@ class StableDiffusionPipelineMidwayPatch(StableDiffusionPipeline):
                                 negative_prompt_embeds=negative_prompt_embeds,
                                 lora_scale=text_encoder_lora_scale,
                             )
+                            print(second_prompt)
                             print(prompt_embeds.shape)
                             print("Prompt swapped!")
                         resetted = True
