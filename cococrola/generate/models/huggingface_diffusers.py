@@ -51,7 +51,7 @@ class DiffusersImageGenerator(ImageGenerator):
             ).images
         return images
     
-    def generate_seed_change(self, prompt: str, seed_reset_step : int = 500, guidance_scale : float = 7.5, num_img: int = 9) -> List[Image.Image]:
+    def generate_seed_change(self, prompt: str, seed_reset_step : int = 25, guidance_scale : float = 7.5, num_img: int = 9) -> List[Image.Image]:
         #if self.pipe is not Union[Type[StableDiffusionPipelineMidwayPatch], Type[AltDiffusionPipelineMidwayPatch]]:
         #    raise ValueError("Seed change only supported for the MidwayPatch patched pipelines in models.patches")
         #images = []
@@ -65,7 +65,7 @@ class DiffusersImageGenerator(ImageGenerator):
             ).images
         return images
     
-    def generate_prompt_change(self, prompt: str, second_prompt: str, prompt_reset_step : int = 500, guidance_scale : float = 7.5, num_img: int = 9) -> List[Image.Image]:
+    def generate_prompt_change(self, prompt: str, second_prompt: str, prompt_reset_step : int = 25, guidance_scale : float = 7.5, num_img: int = 9) -> List[Image.Image]:
         #print(type(self.pipe))
         #if self.pipe is not Union[Type[StableDiffusionPipelineMidwayPatch], Type[AltDiffusionPipelineMidwayPatch]]:
         #    raise ValueError("Seed change only supported for the MidwayPatch patched pipelines in models.patches")

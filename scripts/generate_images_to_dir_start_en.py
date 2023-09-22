@@ -17,7 +17,7 @@ from cococrola.utils.click_config import CommandWithConfigFile
 @click.option('--start_line', type=int, default=1)
 @click.option('--device', type=str, default="cuda")
 @click.option('--global_seed_fudge', type=int, default=0)
-@click.option('--switch_off_english_step', type=int, default=500)
+@click.option('--switch_off_english_step', type=int, default=25)
 def main(model, output_dir, num_img, input_csv, prompts_base, start_line, device, global_seed_fudge, switch_off_english_step):
     generator = models.get_generator(model, device)
 
