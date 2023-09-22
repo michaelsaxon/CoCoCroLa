@@ -93,8 +93,6 @@ class StableDiffusionPipelineMidwayPatch(StableDiffusionPipeline):
         # Here we concatenate the unconditional and text embeddings into a single batch
         # to avoid doing two forward passes
         if do_classifier_free_guidance:
-            print(negative_prompt_embeds.shape)
-            print(prompt_embeds.shape)
             prompt_embeds = torch.cat([negative_prompt_embeds, prompt_embeds])
 
         # 4. Prepare timesteps
@@ -113,8 +111,6 @@ class StableDiffusionPipelineMidwayPatch(StableDiffusionPipeline):
             generator,
             latents,
         )
-        print(prompt)
-        print(prompt_embeds.shape)
 
         # 6. Prepare extra step kwargs. TODO: Logic should ideally just be moved out of the pipeline
         extra_step_kwargs = self.prepare_extra_step_kwargs(generator, eta)
@@ -127,11 +123,11 @@ class StableDiffusionPipelineMidwayPatch(StableDiffusionPipeline):
                     # t counts down from 1000
                     if t < reset_step:
                         # this is the step we switch at
-                        print("switching!")
                         if second_prompt is None:
                             generator = generator.manual_seed(random.randint(0, 1000000))
                         else:
-                            print("Swapping prompt!")
+                            # this bit of the code is very gross. I think I should remove negative_prompt_embeds
+                            # and only work with the prompts I care about. I think I should remove all cfg ref
                             # swapping prompt to other prompt
                             prompt_embeds, _ = self.encode_prompt(
                                 second_prompt,
@@ -144,11 +140,7 @@ class StableDiffusionPipelineMidwayPatch(StableDiffusionPipeline):
                                 lora_scale=text_encoder_lora_scale,
                             )
                             if do_classifier_free_guidance:
-                                print(negative_prompt_embeds.shape)
-                                print(prompt_embeds.shape)
                                 prompt_embeds = torch.cat([negative_prompt_embeds, prompt_embeds])
-                            print(second_prompt)
-                            print(prompt_embeds.shape)
                             print("Prompt swapped!")
                         resetted = True
 
