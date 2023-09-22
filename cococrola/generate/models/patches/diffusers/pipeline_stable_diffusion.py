@@ -116,6 +116,7 @@ class StableDiffusionPipelineMidwayPatch(StableDiffusionPipeline):
         num_warmup_steps = len(timesteps) - num_inference_steps * self.scheduler.order
         with self.progress_bar(total=num_inference_steps) as progress_bar:
             for i, t in enumerate(timesteps):
+                print(t)
                 if t == reset_step:
                     if second_prompt is None:
                         generator = generator.manual_seed(random.randint(0, 1000000))

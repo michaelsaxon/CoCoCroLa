@@ -1,0 +1,32 @@
+- Script sharing has drawbacks too
+- Count and plot rate of interior/exterior errors by language to problematize the benchmark
+- Count rate of generic/specific errors (woman pics for ja, jerusalem pics)
+- Language knowledge is not predictably consistent (craiyon mega pizza, butterfly, moon, eye, rose, cup, lobster)
+- woman/girl/man/boy/teacher/doctor
+
+
+Extra analysis:
+- collisions?
+
+
+UNIVERSAL PIZZA NON-UNIVERSAL FACE
+- any words that are identical but we see changes????
+
+
+
+CUDA_VISIBLE_DEVICES=2 python generate_images_to_dir.py --input_csv ../experiments/localization/concepts.csv --output_dir ../results/localization/SD1-4-test2/ --model SD1-4
+
+
+CUDA_VISIBLE_DEVICES=1 python generate_images_to_dir_start_en.py --input_csv ../experiments/localization/concepts.csv --output_dir ../results/localization_off_en/SD2/ --model SD2 --switch_off_english_step 10
+CUDA_VISIBLE_DEVICES=2 python generate_images_to_dir_start_en.py --input_csv ../experiments/localization/concepts.csv --output_dir ../results/localization_off_en/SD1-4/ --model SD1-4 --switch_off_english_step 10
+CUDA_VISIBLE_DEVICES=3 python generate_images_to_dir_start_en.py --input_csv ../experiments/localization/concepts.csv --output_dir ../results/localization_off_en/SD1-1/ --model SD1-1 --switch_off_english_step 10
+
+
+mkdir localization_off_en/
+cd localization_off_en
+for MODEL in SD2 SD1-4 SD1-1; do
+mkdir $MODEL/
+cd $MODEL
+scp zion3:CoCoCroLa/results/localization_off_en/$MODEL/0-*.png .
+cd ..
+done
