@@ -22,7 +22,6 @@ SUPPORTED_MODELS = sum([list(MODEL_MAP_DIFFUSERS.keys()), list(MODEL_MAP_CRAIYON
 
 # to_add : [ 'CV2',]
 
-
 def get_generator(model_code : str, device : str):
     if model_code not in SUPPORTED_MODELS:
         raise ValueError(f"Model code {model_code} not supported. Supported models are {SUPPORTED_MODELS}")

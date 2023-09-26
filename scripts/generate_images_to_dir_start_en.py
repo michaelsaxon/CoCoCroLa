@@ -3,7 +3,7 @@ import json
 
 import click
 
-from cococrola.generate import models
+from cococrola.generate import models, generate_split_batch
 #from cococrola.utils.click_config import CommandWithConfigFile
 from cococrola.utils.simple_csv import csv_to_index_elem_iterator
 from cococrola.utils.save_imgs import save_imgs_to_dir
@@ -18,9 +18,10 @@ from cococrola.utils.save_imgs import save_imgs_to_dir
 @click.option('--start_line', type=int, default=1)
 @click.option('--device', type=str, default="cuda")
 @click.option('--global_seed_fudge', type=int, default=0)
-@click.option('--switch_lang_step', type=int, default=25)
+@click.option('--switch_lang_step', type=int, default=950)
 @click.option('--start_lang', type=str, default="en")
-def main(model, output_dir, num_img, input_csv, prompts_base, start_line, device, global_seed_fudge, switch_lang_step, start_lang):
+@click.option('--split_batch', type=int, default=1)
+def main(model, output_dir, num_img, input_csv, prompts_base, start_line, device, global_seed_fudge, switch_lang_step, start_lang, split_batch):
     generator = models.get_generator(model, device)
 
     os.makedirs(output_dir, exist_ok=True)
@@ -42,7 +43,14 @@ def main(model, output_dir, num_img, input_csv, prompts_base, start_line, device
         generator.update_noise_generator(seed = concept_number + global_seed_fudge)
 
         # 3. generate the images
-        images = generator.generate_prompt_change(english_prompt, prompt, prompt_reset_step = switch_lang_step, num_img = num_img)
+        images = generate_split_batch(
+            generate_function = generator.generate_prompt_change, 
+            num_img = num_img, 
+            split_batch = split_batch,
+            english_prompt = english_prompt, 
+            prompt = prompt, 
+            prompt_reset_step = switch_lang_step
+        )
  
         # 4. save_the images
         fname_base = f"{output_dir}/{concept_number}-{lang_code}-{concept_reflang}"

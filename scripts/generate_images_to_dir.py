@@ -3,7 +3,7 @@ import json
 
 import click
 
-from cococrola.generate import models
+from cococrola.generate import models, generate_split_batch
 #from cococrola.utils.click_config import CommandWithConfigFile
 from cococrola.utils.simple_csv import csv_to_index_elem_iterator
 from cococrola.utils.save_imgs import save_imgs_to_dir
@@ -37,10 +37,12 @@ def main(model, output_dir, num_img, split_batch, input_csv, prompts_base, start
 
         # 3. generate the images
         print(f"generating {lang_code}:{concept_reflang}, '{concept_lang}'")
-        if split_batch != 1:
-            images = generator.generate_split_batch(prompt, num_img, split_batch)
-        else:
-            images = generator.generate(prompt, num_img)
+        images = generate_split_batch(
+            generate_function = generator.generate, 
+            num_img = num_img, 
+            split_batch = split_batch,
+            prompt = prompt
+        )
         
         # 4. save_the images
         fname_base = f"{output_dir}/{concept_number}-{lang_code}-{concept_reflang}"
