@@ -19,7 +19,7 @@ class ImageGenerator():
         raise NotImplementedError
 
 
-def generate_split_batch(generate_function : function, split_batch: int = 3, num_img: int = 9, **kwargs) -> List[Image.Image]:
+def generate_split_batch(generate_function : Type[function], split_batch: int = 3, num_img: int = 9, **kwargs) -> List[Image.Image]:
     if split_batch < 1 or split_batch > num_img:
         raise ValueError("split_batch must be an integer between 1 and num_img")
     if num_img % split_batch != 0:
