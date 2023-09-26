@@ -31,12 +31,10 @@ def main(model, output_dir, num_img, input_csv, prompts_base, start_line, device
 
 
     # putting this in a different file would be overabstracting!
-    for concept_number, concept_reflang, lang_code, concept_lang in csv_to_index_elem_iterator(input_csv, start_line, ref_lang="en"):
+    for concept_number, concept_reflang, lang_code, concept_lang in csv_to_index_elem_iterator(input_csv, start_line, ref_lang=start_lang):
         # 1. build a prompt based on the language-specific prompt templates
-        prompt = lang_prompt_templates[lang_code].replace("$$$", concept_lang)
-
-        # additionally, build an english prompt specifically to use as init prompt
-        english_prompt = lang_prompt_templates[start_lang].replace("$$$", concept_reflang)
+        first_prompt = lang_prompt_templates[start_lang].replace("$$$", concept_reflang)
+        second_prompt = lang_prompt_templates[lang_code].replace("$$$", concept_lang)
 
         # 2. do whatever state modification we want to do to the generator
         # fix the concept-level seed based on the csv line we're on (same starting seed for each lang)
@@ -47,8 +45,8 @@ def main(model, output_dir, num_img, input_csv, prompts_base, start_line, device
             generate_function = generator.generate_prompt_change, 
             num_img = num_img, 
             split_batch = split_batch,
-            english_prompt = english_prompt, 
-            prompt = prompt, 
+            prompt = first_prompt, 
+            second_prompt = second_prompt,
             prompt_reset_step = switch_lang_step
         )
  
