@@ -9,3 +9,4 @@ def csv_to_index_elem_iterator(input_csv_path : str, start_line : int = 1, ref_l
         line = line.strip().split(",")
         for lang_idx, lang in enumerate(index):
             yield (line_idx - 1, line[ref_lang_idx], lang, line[lang_idx])
+

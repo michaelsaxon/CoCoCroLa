@@ -29,5 +29,5 @@ def generate_split_batch(generate_function : Callable, split_batch: int = 3, num
         for _ in range(num_img // split_batch):
             images += generate_function(num_img = split_batch, **kwargs)
     else:
-        images = generate_function(num_img = split_batch, **kwargs)
+        images = generate_function(num_img = num_img, **kwargs)
     return images
