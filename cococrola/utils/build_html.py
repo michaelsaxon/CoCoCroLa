@@ -50,6 +50,7 @@ def build_squares(input_csv, fname_base=".", base_word_point=0):
                 if i % 3 == 0:
                     this_line += "<br>"
                 fname = f"{fname_base}{line_no}-{index[idx]}-{line[base_word_point]}-{i}.png"
+                print("ITS A PNG MORON")
                 this_line += f'<img src="{fname}">'
             this_line += "</div>"
         middle += this_line
