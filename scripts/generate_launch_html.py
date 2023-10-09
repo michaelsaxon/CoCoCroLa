@@ -28,7 +28,7 @@ def main(input_csv, images_dir, base_language, socket):
     print("Building index.html!")
     index = open(input_csv, "r").readlines()[0].strip().split(",")
     base_word_point = index.index(base_language.lower())
-    page_html_lines = build_squares(input_csv, ".", base_word_point)
+    page_html_lines = build_squares(input_csv, "", base_word_point)
     print("CDing to images dir")
     with cd(images_dir):
         # get word point as the index of the language code in the first row of the csv
