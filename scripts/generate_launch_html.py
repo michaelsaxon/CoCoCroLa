@@ -8,7 +8,7 @@ from cococrola.utils.build_html import build_squares
 
 #@click.command(cls=CommandWithConfigFile('../config/generate.yaml'))
 @click.command()
-@click.option('--input_csv', type=str, default="../benchmark/v0-1/concepts.csv")
+@click.option('--input_csv', type=str, default="../experiments/localization/concepts.csv")
 @click.option('--fname_base', type=str, default="../results/localization_off_en/SD2")
 @click.option('--base_language', type=str, default="en")
 @click.option('--socket', type=int, default=8000)
