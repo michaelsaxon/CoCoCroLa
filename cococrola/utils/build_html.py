@@ -30,7 +30,7 @@ TAIL = '''
 </html>
 '''
 
-
+# lmao
 
 def build_squares(input_csv, fname_base=".", base_word_point=0):
     input_csv = open(input_csv, "r").readlines()
