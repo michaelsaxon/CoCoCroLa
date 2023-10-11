@@ -58,7 +58,7 @@ def build_squares(input_csv, fname_base=".", base_word_point=0):
 
 
 
-def build_columns(prompts_base, fname_base=".", base_word_point=0):
+def build_columns(prompts_base, fname_base=".", base_word_point=0, extension="png"):
     prompts_base = open(prompts_base, "r").readlines()
     index = prompts_base[0].strip().split(",")
 
@@ -83,7 +83,7 @@ def build_columns(prompts_base, fname_base=".", base_word_point=0):
             # build a prompt based on the above templates from the 
             word = index[idx]
             for i in range(10):
-                fname = f"{line_no}-{index[idx]}-{line[base_word_point]}-{i}.jpg"
+                fname = f"{fname_base}{line_no}-{index[idx]}-{line[base_word_point]}-{i}.{extension}"
                 this_line += f'<img src="{fname}">'
                 this_line += '<br>\n'
             this_line += "</td>\n"
