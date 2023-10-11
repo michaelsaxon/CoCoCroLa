@@ -50,7 +50,6 @@ def build_squares(input_csv, fname_base=".", base_word_point=0):
                 if i % 3 == 0:
                     this_line += "<br>"
                 fname = f"{fname_base}{line_no}-{index[idx]}-{line[base_word_point]}-{i}.png"
-                print("ITS A PNG MORON")
                 this_line += f'<img src="{fname}">'
             this_line += "</div>"
         middle += this_line
@@ -68,38 +67,27 @@ def build_columns(prompts_base, fname_base=".", base_word_point=0):
     for line_no, line in enumerate(list(prompts_base)[1:]):
         this_line = '<tr style="background-color: black; color: white;"><td style="background-color: white;"></td>'
         line = line.strip().split(",")
+        # draw the top line, index row with each word in each langauage
         for idx in range(len(index)):
             lang = index[idx]
             word = line[idx]
-            if lang == default_index_lang:
-                url = "index.html"
-            else: 
-                url = f"sort_{lang}.html"
-            if lang == page_sort_language:
-                this_line += f'<td style="text-align: center; background-color: darkred;">{lang}<br>{word}</td>'
-            else:
-                this_line += f'<td style="text-align: center;"><a style="color: white;" href="{url}">{lang}<br>{word}</td>'
-        this_line += "</tr>\n<tr>\n"
+            this_line += f'<td style="text-align: center; background-color: darkred;">{lang}<br>{word}</td>'
+        # we have drawn the title row, now draw the image row
+        this_line += "</tr>\n"
+        # first cell is the concept in english
         this_line += f'<td style="border-right: 5pt solid rgb(150,0,0); color: rgb(150,0,0); font-size: 20pt; background-color: rgb(255,240,240);"><div style="transform:rotate(-90deg); margin: 0px; padding: 0px;"><b>{line[0]}</b></div></td>'
         # the images
         for idx in range(len(index)):
             lang = index[idx]
-            if lang == default_index_lang:
-                url = "index.html"
-            else: 
-                url = f"sort_{lang}.html"
             this_line += "<td>"
             # build a prompt based on the above templates from the 
             word = index[idx]
             for i in range(10):
-                fname = f"{line_no}-{index[idx]}-{line[0]}-{i}.jpg"
-                if lang != page_sort_language:
-                    this_line += f'<a href="{url}">'
+                fname = f"{line_no}-{index[idx]}-{line[base_word_point]}-{i}.jpg"
                 this_line += f'<img src="{fname}">'
-                if lang != page_sort_language:
-                    this_line += "</a>"
                 this_line += '<br>\n'
             this_line += "</td>\n"
+        # images are drawn, we have finished this line
         this_line += "</tr>\n"
         middle += this_line
 

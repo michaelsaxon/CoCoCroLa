@@ -1,10 +1,13 @@
+# use this script in a forwarding localhost ssh like ssh -L 9090:localhost:8000 user@host 
+# then you can view the results in your browser at localhost:9090
+
 import os
 from http import server
 import socketserver
 
 import click
 
-from cococrola.utils.build_html import build_squares
+from cococrola.utils.build_html import build_squares, build_columns
 
 
 class cd:
@@ -28,6 +31,7 @@ class NoCacheHTTPRequestHandler(
         self.send_header('Cache-Control', 'no-store, must-revalidate')
         self.send_header('Expires', '0')
 
+
 #@click.command(cls=CommandWithConfigFile('../config/generate.yaml'))
 @click.command()
 @click.option('--input_csv', type=str, default="../experiments/localization/concepts.csv")
@@ -38,7 +42,7 @@ def main(input_csv, images_dir, base_language, socket):
     print("Building index.html!")
     index = open(input_csv, "r").readlines()[0].strip().split(",")
     base_word_point = index.index(base_language.lower())
-    page_html_lines = build_squares(input_csv, "", base_word_point)
+    page_html_lines = build_columns(input_csv, "", base_word_point)
     print("CDing to images dir")
     with cd(images_dir):
         # get word point as the index of the language code in the first row of the csv
@@ -53,7 +57,7 @@ def main(input_csv, images_dir, base_language, socket):
                 pass
             finally:
                 httpd.server_close()
-                print("Web server stopped, deleing index.html")
+                print("Web server stopped, deleting index.html")
                 os.remove("index.html")
     print("Returned to main dir! Exiting")
 
