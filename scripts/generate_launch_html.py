@@ -23,6 +23,9 @@ class cd:
         os.chdir(self.savedPath)
 
 
+server.SimpleHTTPRequestHandler.extensions_map = {
+    k: v + ';charset=UTF-8' for k, v in server.SimpleHTTPRequestHandler.extensions_map.items()}
+
 class NoCacheHTTPRequestHandler(
     server.SimpleHTTPRequestHandler
 ):
@@ -56,6 +59,7 @@ def main(input_csv, images_dir, base_language, socket):
             except KeyboardInterrupt:
                 pass
             finally:
+                httpd.shutdown()
                 httpd.server_close()
                 print("Web server stopped, deleting index.html")
                 os.remove("index.html")
