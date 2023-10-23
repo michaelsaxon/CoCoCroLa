@@ -31,6 +31,7 @@ class NoCacheHTTPRequestHandler(
 ):
     def send_response_only(self, code, message=None):
         super().send_response_only(code, message)
+        self.send_header('Content-type', 'text/html; charset=utf-8')
         self.send_header('Cache-Control', 'no-store, must-revalidate')
         self.send_header('Expires', '0')
 
