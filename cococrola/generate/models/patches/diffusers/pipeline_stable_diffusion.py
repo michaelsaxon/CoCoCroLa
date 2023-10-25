@@ -221,6 +221,7 @@ class StableDiffusionPipelineSwapPromptSteps(StableDiffusionPipeline):
             changes_list = []
         else:
             # make sure the list is in descending order of steps
+            print(changes_list)
             changes_list = sorted(changes_list, key=lambda x: x[1], reverse=True)
 
         # 0. Default height and width to unet
