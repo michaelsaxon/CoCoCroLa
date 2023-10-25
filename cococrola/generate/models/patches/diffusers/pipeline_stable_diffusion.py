@@ -293,7 +293,7 @@ class StableDiffusionPipelineSwapPromptSteps(StableDiffusionPipeline):
             for i, t in enumerate(timesteps):
                 if remaining_changes > 0:
                     # t counts down from 1000
-                    next_prompt, next_change_step = changes_list.pop(0)
+                    next_prompt, next_change_step = changes_list[len(changes_list) - remaining_changes]
                     if t < next_change_step:
                         # this is the step we switch at
                         if next_prompt is None:
