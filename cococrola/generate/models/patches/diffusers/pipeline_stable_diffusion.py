@@ -215,6 +215,7 @@ class StableDiffusionPipelineSwapPromptSteps(StableDiffusionPipeline):
         guidance_rescale: float = 0.0,
     ):
         # we use the length of changes_list to track remaining swaps, we remove swap elements when they're applied
+        print(type(changes_list))
         if changes_list is tuple:
             changes_list = [changes_list]
         elif changes_list is None:
