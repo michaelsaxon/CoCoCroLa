@@ -215,15 +215,12 @@ class StableDiffusionPipelineSwapPromptSteps(StableDiffusionPipeline):
         guidance_rescale: float = 0.0,
     ):
         # we use the length of changes_list to track remaining swaps, we remove swap elements when they're applied
-        print(type(changes_list))
-        if changes_list is tuple:
+        if type(changes_list) is tuple:
             changes_list = [changes_list]
-            print(changes_list)
         elif changes_list is None:
             changes_list = []
         else:
             # make sure the list is in descending order of steps
-            print(changes_list)
             changes_list = sorted(changes_list, key=lambda x: x[1], reverse=True)
 
         # 0. Default height and width to unet
