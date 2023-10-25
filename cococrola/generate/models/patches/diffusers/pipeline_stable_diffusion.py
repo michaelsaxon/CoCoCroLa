@@ -222,6 +222,7 @@ class StableDiffusionPipelineSwapPromptSteps(StableDiffusionPipeline):
         else:
             # make sure the list is in descending order of steps
             changes_list = sorted(changes_list, key=lambda x: x[1], reverse=True)
+        remaining_changes = len(changes_list)
 
         # 0. Default height and width to unet
         height = height or self.unet.config.sample_size * self.vae_scale_factor
@@ -290,7 +291,7 @@ class StableDiffusionPipelineSwapPromptSteps(StableDiffusionPipeline):
         num_warmup_steps = len(timesteps) - num_inference_steps * self.scheduler.order
         with self.progress_bar(total=num_inference_steps) as progress_bar:
             for i, t in enumerate(timesteps):
-                if len(changes_list) > 0:
+                if remaining_changes > 0:
                     # t counts down from 1000
                     next_prompt, next_change_step = changes_list.pop(0)
                     if t < next_change_step:
@@ -314,6 +315,7 @@ class StableDiffusionPipelineSwapPromptSteps(StableDiffusionPipeline):
                             if do_classifier_free_guidance:
                                 prompt_embeds = torch.cat([negative_prompt_embeds, prompt_embeds])
                             print("Prompt swapped!")
+                        remaining_changes -= 1
 
                 # expand the latents if we are doing classifier free guidance
                 latent_model_input = torch.cat([latents] * 2) if do_classifier_free_guidance else latents
