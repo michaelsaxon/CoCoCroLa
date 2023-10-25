@@ -218,6 +218,7 @@ class StableDiffusionPipelineSwapPromptSteps(StableDiffusionPipeline):
         print(type(changes_list))
         if changes_list is tuple:
             changes_list = [changes_list]
+            print(changes_list)
         elif changes_list is None:
             changes_list = []
         else:
