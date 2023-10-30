@@ -90,13 +90,14 @@ def precompute_fingerprint_matrix(processor, model, prompts_base, analysis_dir, 
 @click.option('--num_samples', default=12)
 @click.option('--fingerprint_selection_count', default=100)
 @click.option('--main_language', default="en")
-def main(analysis_dir, num_samples, fingerprint_selection_count, main_language):
+@click.option('--input_csv', type=str, default="../benchmark/v0-1/concepts.csv")
+def main(analysis_dir, num_samples, fingerprint_selection_count, main_language, input_csv):
     device = "cuda"
     model = CLIPVisionModel.from_pretrained("openai/clip-vit-base-patch32")
     processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
     model.to(device)
     
-    prompts_base = open("frequencylist/freq_lists_translated.csv", "r").readlines()
+    prompts_base = open(input_csv, "r").readlines()
     index = prompts_base[0].strip().split(",")
 
     out_lines_main_sim = [prompts_base[0]]

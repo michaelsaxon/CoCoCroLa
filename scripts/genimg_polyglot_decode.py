@@ -1,3 +1,8 @@
+#CUDA_VISIBLE_DEVICES=2 python genimg_polyglot_decode.py --output_dir ../results/polyglot/SD2_en_900 --switch_prompt_step 900 --randomize
+#CUDA_VISIBLE_DEVICES=3 python genimg_polyglot_decode.py --output_dir ../results/polyglot/SD2_en_800 --switch_prompt_step 800 --randomize
+#CUDA_VISIBLE_DEVICES=4 python genimg_polyglot_decode.py --output_dir ../results/polyglot/SD2_en_700 --switch_prompt_step 700 --randomize
+#CUDA_VISIBLE_DEVICES=5 python genimg_polyglot_decode.py --output_dir ../results/polyglot/SD2_en_600 --switch_prompt_step 600 --randomize
+
 import os
 import json
 import random
