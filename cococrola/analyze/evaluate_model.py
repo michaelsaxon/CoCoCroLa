@@ -1,3 +1,4 @@
+# python evaluate_model.py --input_csv ../../benchmark/v0-1/concepts.csv --analysis_dir ../../results/polyglot/SD2_en_600/
 import click
 from PIL import Image, ImageFile
 from transformers import CLIPProcessor, CLIPVisionModel
