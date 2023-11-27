@@ -92,7 +92,8 @@ def precompute_fingerprint_matrix(processor, model, prompts_base, analysis_dir, 
 @click.option('--fingerprint_selection_count', default=100)
 @click.option('--main_language', default="en")
 @click.option('--input_csv', type=str, default="../benchmark/v0-1/concepts.csv")
-def main(analysis_dir, num_samples, fingerprint_selection_count, main_language, input_csv):
+@click.option('--eval_samples_file', type=str, default=None, help="If specified, only use the line numbers listed in this file to evaluate")
+def main(analysis_dir, num_samples, fingerprint_selection_count, main_language, input_csv, eval_samples_file):
     device = "cuda"
     model = CLIPVisionModel.from_pretrained("openai/clip-vit-base-patch32")
     processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
@@ -113,7 +114,13 @@ def main(analysis_dir, num_samples, fingerprint_selection_count, main_language, 
     with open(f"{analysis_dir}/language_diversity.csv", "w") as f:
         f.writelines([prompts_base[0], ",".join([str(inverse_diversity[index]) for index in index]) + "\n"])
     
-    for line_no, line in enumerate(prompts_base[1:]):
+    if eval_samples_file is not None:
+        eval_samples = [int(line.strip()) for line in open(eval_samples_file, "r").readlines()]
+    else:
+        eval_samples = range(len(prompts_base) - 1)
+
+    # for line_no, line in enumerate(prompts_base[1:]):
+    for line_no, line in [(i, prompts_base[i]) for i in eval_samples]:
         results_dict = defaultdict(list)
         line = line.strip().split(",")
         
