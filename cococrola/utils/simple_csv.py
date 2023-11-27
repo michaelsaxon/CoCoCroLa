@@ -1,4 +1,4 @@
-from typing import Union, List, isinstance
+from typing import Union, List
 
 # the first line of the csv is a header containing column labels (eg, language codes)
 # return an iterator over pairs of (index value, cell contents, current line no, line[0])
