@@ -16,18 +16,24 @@ from cococrola.utils.save_imgs import save_imgs_to_dir
 @click.option('--split_batch', type=int, default=1)
 @click.option('--input_csv', type=str, default="../benchmark/v0-1/concepts.csv")
 @click.option('--prompts_base', type=str, default="../benchmark/v0-1/prompts.json")
-@click.option('--start_line', type=int, default=1)
+@click.option('--start_line', type=int, default=1, help="To be deprecated, use --eval_samples_file instead")
 @click.option('--device', type=str, default="cuda")
 @click.option('--global_seed_fudge', type=int, default=0)
-def main(model, output_dir, num_img, split_batch, input_csv, prompts_base, start_line, device, global_seed_fudge):
+@click.option('--eval_samples_file', type=str, default=None, help="If specified, only use the line numbers listed in this file to evaluate")
+def main(model, output_dir, num_img, split_batch, input_csv, prompts_base, start_line, device, global_seed_fudge, eval_samples_file):
     generator = models.get_generator(model, device)
 
     os.makedirs(output_dir, exist_ok=True)
 
     lang_prompt_templates = json.load(open(prompts_base, "r"))
 
+    if eval_samples_file is not None:
+        eval_samples = [int(line.strip()) for line in open(eval_samples_file, "r").readlines()]
+    else:
+        eval_samples = start_line
+
     # putting this in a different file would be overabstracting!
-    for concept_number, concept_reflang, lang_code, concept_lang in csv_to_index_elem_iterator(input_csv, start_line, ref_lang="en"):
+    for concept_number, concept_reflang, lang_code, concept_lang in csv_to_index_elem_iterator(input_csv, eval_samples, ref_lang="en"):
         # 1. build a prompt based on the language-specific prompt templates
         prompt = lang_prompt_templates[lang_code].replace("$$$", concept_lang)
     

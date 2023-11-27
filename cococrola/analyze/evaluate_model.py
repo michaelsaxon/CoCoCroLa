@@ -88,10 +88,10 @@ def precompute_fingerprint_matrix(processor, model, prompts_base, analysis_dir, 
 
 @click.command()
 @click.option('--analysis_dir', default='samples_sd2')
-@click.option('--num_samples', default=12)
+@click.option('--num_samples', default=9)
 @click.option('--fingerprint_selection_count', default=100)
 @click.option('--main_language', default="en")
-@click.option('--input_csv', type=str, default="../benchmark/v0-1/concepts.csv")
+@click.option('--input_csv', type=str, default="../../benchmark/v0-1/concepts.csv")
 @click.option('--eval_samples_file', type=str, default=None, help="If specified, only use the line numbers listed in this file to evaluate")
 def main(analysis_dir, num_samples, fingerprint_selection_count, main_language, input_csv, eval_samples_file):
     device = "cuda"
