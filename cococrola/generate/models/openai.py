@@ -2,6 +2,7 @@ from PIL import Image
 from typing import List
 import os
 import requests
+import warnings
 
 import backoff
 import openai
@@ -43,10 +44,10 @@ class OpenAIImageGenerator(ImageGenerator):
         return images
 
     def update_noise_generator(self, seed : int = 0) -> None:
-        raise AttributeError("The seed cannot be set for DALL-E 2 within the OpenAI API")
+        warnings.warn("The seed cannot be set for DALL-E 2 within the OpenAI API", UserWarning)
 
     def generate_seed_change(self, prompt: str, seed_reset_step : int = 500, num_img: int = 9) -> List[Image.Image]:
-        raise AttributeError("The seed cannot be set for DALL-E 2 within the OpenAI API")
+        warnings.warn("The seed cannot be set for DALL-E 2 within the OpenAI API", UserWarning)
     
     def generate_prompt_change(self, prompt: str, second_prompt: str, prompt_reset_step : int = 500, num_img: int = 9) -> List[Image.Image]:
-        raise AttributeError("The diffusion pipeline for DALL-E 2 cannot be accessed within the OpenAI API")
+        warnings.warn("The diffusion pipeline for DALL-E 2 cannot be accessed within the OpenAI API", UserWarning)
