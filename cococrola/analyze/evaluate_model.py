@@ -107,6 +107,8 @@ def main(analysis_dir, num_samples, fingerprint_selection_count, main_language, 
     out_lines_self_sim = [prompts_base[0]]
     out_lines_main_spec = [prompts_base[0]]
 
+    lines_all = prompts_base[1:]
+
     # collect the fingerprints for each language in this model
     fingerprints = precompute_fingerprint_matrix(processor, model, prompts_base, analysis_dir, fingerprint_selection_count)
     # language fingerprint self-similarity (negative diversity)
@@ -118,10 +120,10 @@ def main(analysis_dir, num_samples, fingerprint_selection_count, main_language, 
     if eval_samples_file is not None:
         eval_samples = [int(line.strip()) for line in open(eval_samples_file, "r").readlines()]
     else:
-        eval_samples = range(len(prompts_base) - 1)
+        eval_samples = range(len(lines_all) - 1)
 
-    # for line_no, line in enumerate(prompts_base[1:]):
-    for line_no, line in [(i, prompts_base[i]) for i in eval_samples]:
+    # for line_no, line in enumerate(lines_all[1:]):
+    for line_no, line in [(i, lines_all[i]) for i in eval_samples]:
         results_dict = defaultdict(list)
         line = line.strip().split(",")
         
