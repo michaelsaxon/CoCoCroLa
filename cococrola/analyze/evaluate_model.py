@@ -16,6 +16,7 @@ def open_image_if_exists(fname):
     if os.path.isfile(fname):
         return Image.open(fname, "r")
     else:
+        print("Image not found")
         return Image.new('RGB', (50, 50), (0, 0, 0))
 
 def get_image_embeddings(processor, model, fnames):
