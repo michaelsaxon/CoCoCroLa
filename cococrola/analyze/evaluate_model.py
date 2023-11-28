@@ -129,6 +129,7 @@ def main(analysis_dir, num_samples, fingerprint_selection_count, main_language, 
         for idx in range(len(index)):
             # build a prompt based on the above templates from the 
             fnames = [f"{analysis_dir}/{line_no}-{index[idx]}-{line[0]}-{i}.png" for i in range(num_samples)]
+            print(fnames)
             image_embedding = get_image_embeddings(processor, model, fnames)
             results_dict[index[idx]] = image_embedding
         
