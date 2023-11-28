@@ -122,13 +122,14 @@ def main(analysis_dir, num_samples, fingerprint_selection_count, main_language, 
 
     # for line_no, line in enumerate(prompts_base[1:]):
     for line_no, line in [(i, prompts_base[i]) for i in eval_samples]:
+        # line_no is a line in the csv, needs to be decremented by 1 for use as an fname
         results_dict = defaultdict(list)
         line = line.strip().split(",")
         
         # collect this languages embeddings
         for idx in range(len(index)):
             # build a prompt based on the above templates from the 
-            fnames = [f"{analysis_dir}/{line_no}-{index[idx]}-{line[0]}-{i}.png" for i in range(num_samples)]
+            fnames = [f"{analysis_dir}/{line_no - 1}-{index[idx]}-{line[0]}-{i}.png" for i in range(num_samples)]
             image_embedding = get_image_embeddings(processor, model, fnames)
             results_dict[index[idx]] = image_embedding
         
