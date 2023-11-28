@@ -13,3 +13,6 @@ CUDA_VISIBLE_DEVICES="$device" python evaluate_model.py \
     --analysis_dir ../../results/correction_zh_jp_revised/"$model"/
 
 #    --eval_samples_file ../../experiments/correction/lines_zh_jp_revised.csv
+
+
+# test and see
