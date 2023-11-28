@@ -14,9 +14,9 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 # if image exists, open it. Else, generate 50x50 black
 def open_image_if_exists(fname):
     if os.path.isfile(fname):
+        print("Image found")
         return Image.open(fname, "r")
     else:
-        print("Image not found")
         return Image.new('RGB', (50, 50), (0, 0, 0))
 
 def get_image_embeddings(processor, model, fnames):
