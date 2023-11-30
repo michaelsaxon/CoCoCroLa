@@ -149,9 +149,9 @@ def main(analysis_dir, num_samples, fingerprint_selection_count, main_language, 
         print("self SIM " + line[0] + " " + str(self_sims))
         print("specific " + line[0] + " " + str(inverse_specificity))
 
-        out_lines_main_sim.append(",".join([str(language_similarities[language]) for language in index]) + "\n")
-        out_lines_self_sim.append(",".join([str(self_sims[language]) for language in index]) + "\n")
-        out_lines_main_spec.append(",".join([str(inverse_specificity[language]) for language in index]) + "\n")
+        out_lines_main_sim.append(f"{line[0]}," + ",".join([str(language_similarities[language]) for language in index]) + "\n")
+        out_lines_self_sim.append(f"{line[0]}," + ",".join([str(self_sims[language]) for language in index]) + "\n")
+        out_lines_main_spec.append(f"{line[0]}," + ",".join([str(inverse_specificity[language]) for language in index]) + "\n")
         
     with open(f"{analysis_dir}/results_{main_language}.csv", "w") as f:
         f.writelines(out_lines_main_sim)
