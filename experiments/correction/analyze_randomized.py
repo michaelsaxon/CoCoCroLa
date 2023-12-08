@@ -31,7 +31,7 @@ def get_fnames_from_lang_word(lines, lang, word_in_lang, num_samples):
 @click.command()
 @click.option('--analysis_dir', default='../results/correction_zh_jp_revised/')
 @click.option('--num_samples', default=9)
-@click.option('--input_csv', type=str, default="randomized_es.csv")
+@click.option('--random_csv', type=str, default="randomized_es.csv")
 @click.option('--original_csv', type=str, default="../../benchmark/v0-1/concepts.csv")
 def main(analysis_dir, num_samples, random_csv, original_csv):
     # HACK get language from fname, model from analysis_dir only works if you ran the randomize language script first.
