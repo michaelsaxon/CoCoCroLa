@@ -56,7 +56,9 @@ def main(analysis_dir, num_samples, random_csv, original_csv):
 
     print("Starting")
     # for line_no, line in enumerate(prompts_base[1:]):
+    num_img_idx = len(lines[1:])
     for img_idx, line in enumerate(tqdm(lines[1:])):
+        img_idx = img_idx % num_img_idx
         results_dict_before = defaultdict(list)
         results_dict_after = defaultdict(list)
         # line_no is a line in the csv, needs to be decremented by 1 for use as an fname
