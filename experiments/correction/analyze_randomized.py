@@ -18,15 +18,15 @@ from cococrola.analyze.evaluate_model import get_image_embeddings, compare_by_la
 
 
 # fname format is idx(line_no - 1)-lang-word-img_num.png
-def gen_fnames(img_idx, lang, word_in_english, num_samples):
-    return [f"{img_idx}-{lang}-{word_in_english}-{i}.png" for i in range(num_samples)]
+def gen_fnames(path_base, img_idx, lang, word_in_english, num_samples):
+    return [f"{path_base}/{img_idx}-{lang}-{word_in_english}-{i}.png" for i in range(num_samples)]
 
-def get_fnames_from_lang_word(lines, lang, word_in_lang, num_samples):
+def get_fnames_from_lang_word(path_base, lines, lang, word_in_lang, num_samples):
     index = lines[0].strip().split(",")
     lang_idx = index.index(lang)
     line_no = [line.strip().split(",")[lang_idx] for line in lines[1:]].index(word_in_lang) + 1
     word_english = lines[line_no].strip().split(",")[0]
-    return [f"{line_no - 1}-{lang}-{word_english}-{i}.png" for i in range(num_samples)]
+    return [f"{path_base}/{line_no - 1}-{lang}-{word_english}-{i}.png" for i in range(num_samples)]
 
 @click.command()
 @click.option('--analysis_dir', default='../results/correction_zh_jp_revised/')
@@ -61,9 +61,9 @@ def main(analysis_dir, num_samples, random_csv, original_csv):
         line = line.strip().split(",")
         
 
-        fnames_en = gen_fnames(img_idx, "en", line[0], num_samples)
-        fnames_lang_before = get_fnames_from_lang_word(lines_orig, lang, line[1], num_samples)
-        fnames_lang_after = gen_fnames(img_idx, lang, line[0], num_samples)
+        fnames_en = gen_fnames(analysis_dir, img_idx, "en", line[0], num_samples)
+        fnames_lang_before = get_fnames_from_lang_word(analysis_dir, lines_orig, lang, line[1], num_samples)
+        fnames_lang_after = gen_fnames(analysis_dir, img_idx, lang, line[0], num_samples)
 
         en_embeddings = get_image_embeddings(processor, model, fnames_en)
 
@@ -75,7 +75,7 @@ def main(analysis_dir, num_samples, random_csv, original_csv):
         cross_sim_before = compare_by_lang(results_dict_before, main_lang="en")[lang]
         cross_sim_after = compare_by_lang(results_dict_before, main_lang="en")[lang]
 
-        outlines.append(f"{line.strip()},{cross_sim_before},{cross_sim_after}\n")
+        outlines.append(f"{','.join(line)},{cross_sim_before},{cross_sim_after}\n")
 
         
     with open(f"cccl_score_{model_name}_{lang}.csv", "w") as f:
