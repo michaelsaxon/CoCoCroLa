@@ -15,7 +15,7 @@ def get_sim_scores_string(text_model, sent_english, sent_ml_before, sent_ml_afte
     sim_before = util.cos_sim(text_model.encode(sent_english), text_model.encode(sent_ml_before))
     sim_after = util.cos_sim(text_model.encode(sent_english), text_model.encode(sent_ml_after))
     sim_diff = sim_after - sim_before
-    return f"{sim_before},{sim_after},{sim_diff}"
+    return f"{float(sim_before)},{float(sim_after)},{float(sim_diff)}"
 
 @click.command()
 @click.option('--input_folder', default='../../benchmark/v0-1/')
