@@ -49,7 +49,7 @@ def main(analysis_dir, num_samples, random_csv, original_csv):
     
     lines = open(random_csv, "r").readlines()
 
-    lines_orig = open(original_csv, "r").readlines(
+    lines_orig = open(original_csv, "r").readlines()
 
     outlines = [lines[0].strip() + f",{lang}_before,{lang}_after\n"]    
 
