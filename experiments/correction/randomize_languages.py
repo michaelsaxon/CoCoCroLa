@@ -45,10 +45,10 @@ def main(input_folder):
                 sim_scores_string = get_sim_scores_string(
                     text_model, 
                     template_en.replace("$$$",true_english), 
-                    template_other_lang.replace("$$$",true_other_lang), 
-                    template_other_lang.replace("$$$",random_other_lang)
+                    template_other_lang.replace("$$$",random_other_lang),
+                    template_other_lang.replace("$$$",true_other_lang)
                 )
-                out_lines.append(f"{true_english},{true_other_lang},{random_other_lang},{sim_scores_string}\n")
+                out_lines.append(f"{true_english},{random_other_lang},{true_other_lang},{sim_scores_string}\n")
         with open(f"randomized_{lang}.csv", "w") as f:
             f.writelines(out_lines)
             
