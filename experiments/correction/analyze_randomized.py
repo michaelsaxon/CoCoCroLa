@@ -11,6 +11,7 @@ from collections import defaultdict
 import torch.nn.functional as F
 import random
 import os
+from tqdm import tqdm
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -54,7 +55,7 @@ def main(analysis_dir, num_samples, random_csv, original_csv):
     outlines = [lines[0].strip() + f",{lang}_before,{lang}_after\n"]    
 
     # for line_no, line in enumerate(prompts_base[1:]):
-    for img_idx, line in enumerate(lines[1:]):
+    for img_idx, line in tqdm(enumerate(lines[1:])):
         results_dict_before = defaultdict(list)
         results_dict_after = defaultdict(list)
         # line_no is a line in the csv, needs to be decremented by 1 for use as an fname
