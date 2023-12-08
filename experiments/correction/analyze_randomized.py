@@ -14,14 +14,29 @@ import os
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-from cococrola.analyze.evaluate_model import get_image_embeddings, lang_cross_sim
+from cococrola.analyze.evaluate_model import get_image_embeddings, compare_by_lang
+
+
+# fname format is idx(line_no - 1)-lang-word-img_num.png
+def gen_fnames(img_idx, lang, word_in_english, num_samples):
+    return [f"{img_idx}-{lang}-{word_in_english}-{i}.png" for i in range(num_samples)]
+
+def get_fnames_from_lang_word(lines, lang, word_in_lang, num_samples):
+    index = lines[0].strip().split(",")
+    lang_idx = index.index(lang)
+    line_no = [line.strip().split(",")[lang_idx] for line in lines[1:]].index(word_in_lang) + 1
+    word_english = lines[line_no].strip().split(",")[0]
+    return [f"{line_no - 1}-{lang}-{word_english}-{i}.png" for i in range(num_samples)]
 
 @click.command()
 @click.option('--analysis_dir', default='../results/correction_zh_jp_revised/')
 @click.option('--num_samples', default=9)
-@click.option('--main_language', default="en")
-@click.option('--input_csv', type=str, default="../../benchmark/v0-1/concepts.csv")
-def main(analysis_dir, num_samples, main_language, input_csv):
+@click.option('--input_csv', type=str, default="randomized_es.csv")
+def main(analysis_dir, num_samples, input_csv):
+    # HACK get language from fname, model from analysis_dir only works if you ran the randomize language script first.
+    lang = input_csv.split(".")[0].split("_")[-1]
+    model_name = analysis_dir.strip("/").split("/")[-1].strip("samples_")
+    # unlike the main analysis script, in this case we process each language serpately (they are randomized separately after all)
 
     if not os.path.exists(input_csv):
         raise Exception(f"Input CSV {input_csv} does not exist. Generate it first!")
@@ -31,48 +46,34 @@ def main(analysis_dir, num_samples, main_language, input_csv):
     processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
     model.to(device)
     
-    prompts_base = open(input_csv, "r").readlines()
-    index = prompts_base[0].strip().split(",")
+    lines = open(input_csv, "r").readlines()
 
-    out_lines_main_sim = [prompts_base[0]]
-    out_lines_self_sim = [prompts_base[0]]
-    out_lines_main_spec = [prompts_base[0]]
-    
+    outlines = [lines[0].strip() + f",{lang}_before,{lang}_after\n"]    
 
     # for line_no, line in enumerate(prompts_base[1:]):
-    for line_no, line in enumerate(prompts_base):
+    for img_idx, line in enumerate(lines[1:]):
+        results_dict_before = defaultdict(list)
+        results_dict_after = defaultdict(list)
         # line_no is a line in the csv, needs to be decremented by 1 for use as an fname
-        results_dict = defaultdict(list)
         line = line.strip().split(",")
         
-        # collect this languages embeddings
-        for idx in range(len(index)):
-            # build a prompt based on the above templates from the 
-            fnames = [f"{analysis_dir}/{line_no - 1}-{index[idx]}-{line[0]}-{i}.png" for i in range(num_samples)]
-            image_embedding = get_image_embeddings(processor, model, fnames)
-            results_dict[index[idx]] = image_embedding
+
+        fnames_en = gen_fnames(img_idx, "en", line[0], num_samples)
+        fnames_lang_before = get_fnames_from_lang_word(lines, lang, line[1], num_samples)
+        fnames_lang_after = gen_fnames(img_idx, lang, line[0], num_samples)
+
+        en_embeddings = get_image_embeddings(processor, model, fnames_en)
+
+        results_dict_before["en"] =  en_embeddings
+        results_dict_after["en"] =  en_embeddings
+        results_dict_before[lang] = get_image_embeddings(processor, model, fnames_lang_before)
+        results_dict_after[lang] = get_image_embeddings(processor, model, fnames_lang_after)
+
+        cross_sim_before = compare_by_lang(results_dict_before, main_lang="en")[lang]
+        cross_sim_after = compare_by_lang(results_dict_before, main_lang="en")[lang]
+
+        outlines.append(f"{line.strip()},{cross_sim_before},{cross_sim_after}\n")
+
         
-        # zero out if there's an error log for each word
-        for language in index:
-            if os.path.isfile(f"{analysis_dir}/{line_no}-{language}-{line[0]}-failure.log"):
-                language_similarities[language] = "---"
-                self_sims[language] = "---"
-                inverse_specificity[language] = "---"
-        
-
-        print(f"{main_language} SIM " + line[0] + " " + str(language_similarities))
-        print("self SIM " + line[0] + " " + str(self_sims))
-        print("specific " + line[0] + " " + str(inverse_specificity))
-
-        out_lines_main_sim.append(f"{line[0]}," + ",".join([str(language_similarities[language]) for language in index]) + "\n")
-        out_lines_self_sim.append(f"{line[0]}," + ",".join([str(self_sims[language]) for language in index]) + "\n")
-        out_lines_main_spec.append(f"{line[0]}," + ",".join([str(inverse_specificity[language]) for language in index]) + "\n")
-        
-    with open(f"{analysis_dir}/results_{main_language}.csv", "w") as f:
-        f.writelines(out_lines_main_sim)
-
-    with open(f"{analysis_dir}/results_self.csv", "w") as f:
-        f.writelines(out_lines_self_sim)
-
-    with open(f"{analysis_dir}/results_specific.csv", "w") as f:
-        f.writelines(out_lines_main_spec)
+    with open(f"cccl_score_{model_name}_{lang}.csv", "w") as f:
+        f.writelines(outlines)
