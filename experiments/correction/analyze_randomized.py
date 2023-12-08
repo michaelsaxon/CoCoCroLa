@@ -32,21 +32,24 @@ def get_fnames_from_lang_word(lines, lang, word_in_lang, num_samples):
 @click.option('--analysis_dir', default='../results/correction_zh_jp_revised/')
 @click.option('--num_samples', default=9)
 @click.option('--input_csv', type=str, default="randomized_es.csv")
-def main(analysis_dir, num_samples, input_csv):
+@click.option('--original_csv', type=str, default="../../benchmark/v0-1/concepts.csv")
+def main(analysis_dir, num_samples, random_csv, original_csv):
     # HACK get language from fname, model from analysis_dir only works if you ran the randomize language script first.
-    lang = input_csv.split(".")[0].split("_")[-1]
+    lang = random_csv.split(".")[0].split("_")[-1]
     model_name = analysis_dir.strip("/").split("/")[-1].strip("samples_")
     # unlike the main analysis script, in this case we process each language serpately (they are randomized separately after all)
 
-    if not os.path.exists(input_csv):
-        raise Exception(f"Input CSV {input_csv} does not exist. Generate it first!")
+    if not os.path.exists(random_csv):
+        raise Exception(f"Input CSV {random_csv} does not exist. Generate it first!")
 
     device = "cuda"
     model = CLIPVisionModel.from_pretrained("openai/clip-vit-base-patch32")
     processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
     model.to(device)
     
-    lines = open(input_csv, "r").readlines()
+    lines = open(random_csv, "r").readlines()
+
+    lines_orig = open(original_csv, "r").readlines(
 
     outlines = [lines[0].strip() + f",{lang}_before,{lang}_after\n"]    
 
@@ -59,7 +62,7 @@ def main(analysis_dir, num_samples, input_csv):
         
 
         fnames_en = gen_fnames(img_idx, "en", line[0], num_samples)
-        fnames_lang_before = get_fnames_from_lang_word(lines, lang, line[1], num_samples)
+        fnames_lang_before = get_fnames_from_lang_word(lines_orig, lang, line[1], num_samples)
         fnames_lang_after = gen_fnames(img_idx, lang, line[0], num_samples)
 
         en_embeddings = get_image_embeddings(processor, model, fnames_en)
