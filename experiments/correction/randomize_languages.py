@@ -40,7 +40,7 @@ def main(input_folder):
             for i in range(1, len(lines)):
                 true_english = lines[i].strip().split(",")[0]
                 true_other_lang = lines[i].strip().split(",")[lang_idx]
-                random_other_lang = lines[random_ordering[i]].strip().split(",")[lang_idx]
+                random_other_lang = lines[random_ordering[i-1]].strip().split(",")[lang_idx]
                 sim_scores_string = get_sim_scores_string(
                     text_model, 
                     template_en.replace("$$$",true_english), 
