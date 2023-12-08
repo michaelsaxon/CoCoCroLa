@@ -9,6 +9,6 @@ model="$2"
 
 for lang in es de zh ja he id; do
     CUDA_VISIBLE_DEVICES=$device python analyze_randomized.py \
-        --input_csv randomized_"$lang".csv \
+        --random_csv randomized_"$lang".csv \
         --analysis_dir $model &
 done
