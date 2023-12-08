@@ -77,7 +77,7 @@ def main(analysis_dir, num_samples, random_csv, original_csv):
         results_dict_after[lang] = get_image_embeddings(processor, model, fnames_lang_after)
 
         cross_sim_before = compare_by_lang(results_dict_before, main_lang="en")[lang]
-        cross_sim_after = compare_by_lang(results_dict_before, main_lang="en")[lang]
+        cross_sim_after = compare_by_lang(results_dict_after, main_lang="en")[lang]
 
         outlines.append(f"{','.join(line)},{cross_sim_before},{cross_sim_after}\n")
 
