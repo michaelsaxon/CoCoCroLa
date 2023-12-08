@@ -77,3 +77,7 @@ def main(analysis_dir, num_samples, input_csv):
         
     with open(f"cccl_score_{model_name}_{lang}.csv", "w") as f:
         f.writelines(outlines)
+
+
+if __name__ == "__main__":
+    main()
