@@ -54,6 +54,7 @@ def main(analysis_dir, num_samples, random_csv, original_csv):
 
     outlines = [lines[0].strip() + f",{lang}_before,{lang}_after\n"]    
 
+    print("Starting")
     # for line_no, line in enumerate(prompts_base[1:]):
     for img_idx, line in tqdm(enumerate(lines[1:])):
         results_dict_before = defaultdict(list)
