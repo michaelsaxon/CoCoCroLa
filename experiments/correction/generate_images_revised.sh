@@ -7,10 +7,11 @@
 device="${1:-0}"
 model="${2:-SD2}"
 sb="${3:-1}"
+langs="${4:-zh_jp}"
 
 cd ../../scripts
 CUDA_VISIBLE_DEVICES="$device" python generate_images_to_dir.py \
-    --input_csv ../experiments/correction/concepts_zh_jp_revised.csv \
-    --output_dir ../results/correction_zh_jp_revised/"$model"/ \
+    --input_csv ../experiments/correction/concepts_"$langs"_revised.csv \
+    --output_dir ../results/correction_"$langs"_revised/"$model"/ \
     --model "$model" \
     --split_batch "$sb"
