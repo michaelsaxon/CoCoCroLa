@@ -1,3 +1,8 @@
+# parts of package that don't get committed
+.DS_Store
+results/*
+!results/README.md
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

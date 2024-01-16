@@ -1,0 +1,44 @@
+# all
+PIL
+numpy
+random
+tqdm
+os
+# dalle mini/mega
+jax
+dalle_mini
+vqgan_jax
+flax
+functools
+numpy
+click
+'''# Required only for colab environments + GPU
+!pip install jax==0.3.25 jaxlib==0.3.25 -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+
+# Install required libraries
+!pip install -q dalle-mini
+!pip install -q git+https://github.com/patil-suraj/vqgan-jax.git'''
+# stable diffusion/altdiffusion/etc (based on the diffusers package)
+diffusers
+torch
+click
+typing
+# cogview2
+torch
+argparse
+cogview2_text2image
+
+
+# typical run
+# 1. load model and put on device (requires switches)
+# 2. load input csv
+# 3. iterate over set of prompts
+# 4a. apply whatever applicable conditioning is necessary (eg, setting seed, setting initial noise, etc)
+# 4b. generate image
+# 4c. save image
+
+# needs abstract class containing model that has a generate method
+# generate method should take in a prompt, condition, and count and return an image
+# conditioning happens in the various specific child classes (specific to them), and a runscript checks if the dependencies for that class are installed
+# default install should just have diffusers support, and documentation for writing new models
+# dalle mini, cogview2, openai, and retrieval examples also provided as install flags

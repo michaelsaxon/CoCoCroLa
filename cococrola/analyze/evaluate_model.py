@@ -1,3 +1,4 @@
+# python evaluate_model.py --input_csv ../../benchmark/v0-1/concepts.csv --analysis_dir ../../results/polyglot/SD2_en_600/
 import click
 from PIL import Image, ImageFile
 from transformers import CLIPProcessor, CLIPVisionModel
@@ -15,6 +16,7 @@ def open_image_if_exists(fname):
     if os.path.isfile(fname):
         return Image.open(fname, "r")
     else:
+        print(f"Failing to open {fname}")
         return Image.new('RGB', (50, 50), (0, 0, 0))
 
 def get_image_embeddings(processor, model, fnames):
@@ -69,7 +71,7 @@ def precompute_fingerprint_matrix(processor, model, prompts_base, analysis_dir, 
     fingerprints = {}
     index = prompts_base[0].strip().split(",")
     if selection_count >= len(prompts_base) - 1 or selection_count == -1:
-        use_lines = prompts_base[1:]
+        use_lines = list(range(len(prompts_base) - 1))
     else:
         use_lines = random.sample(range(len(prompts_base) - 1), selection_count)
     # extract a fingerprint for each language
@@ -87,16 +89,18 @@ def precompute_fingerprint_matrix(processor, model, prompts_base, analysis_dir, 
 
 @click.command()
 @click.option('--analysis_dir', default='samples_sd2')
-@click.option('--num_samples', default=12)
+@click.option('--num_samples', default=9)
 @click.option('--fingerprint_selection_count', default=100)
 @click.option('--main_language', default="en")
-def main(analysis_dir, num_samples, fingerprint_selection_count, main_language):
+@click.option('--input_csv', type=str, default="../../benchmark/v0-1/concepts.csv")
+@click.option('--eval_samples_file', type=str, default=None, help="If specified, only use the line numbers listed in this file to evaluate")
+def main(analysis_dir, num_samples, fingerprint_selection_count, main_language, input_csv, eval_samples_file):
     device = "cuda"
     model = CLIPVisionModel.from_pretrained("openai/clip-vit-base-patch32")
     processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
     model.to(device)
     
-    prompts_base = open("frequencylist/freq_lists_translated.csv", "r").readlines()
+    prompts_base = open(input_csv, "r").readlines()
     index = prompts_base[0].strip().split(",")
 
     out_lines_main_sim = [prompts_base[0]]
@@ -111,14 +115,21 @@ def main(analysis_dir, num_samples, fingerprint_selection_count, main_language):
     with open(f"{analysis_dir}/language_diversity.csv", "w") as f:
         f.writelines([prompts_base[0], ",".join([str(inverse_diversity[index]) for index in index]) + "\n"])
     
-    for line_no, line in enumerate(prompts_base[1:]):
+    if eval_samples_file is not None:
+        eval_samples = [int(line.strip()) for line in open(eval_samples_file, "r").readlines()]
+    else:
+        eval_samples = range(1, len(prompts_base))
+
+    # for line_no, line in enumerate(prompts_base[1:]):
+    for line_no, line in [(i, prompts_base[i]) for i in eval_samples]:
+        # line_no is a line in the csv, needs to be decremented by 1 for use as an fname
         results_dict = defaultdict(list)
         line = line.strip().split(",")
         
         # collect this languages embeddings
         for idx in range(len(index)):
             # build a prompt based on the above templates from the 
-            fnames = [f"{analysis_dir}/{line_no}-{index[idx]}-{line[0]}-{i}.png" for i in range(num_samples)]
+            fnames = [f"{analysis_dir}/{line_no - 1}-{index[idx]}-{line[0]}-{i}.png" for i in range(num_samples)]
             image_embedding = get_image_embeddings(processor, model, fnames)
             results_dict[index[idx]] = image_embedding
         
@@ -138,9 +149,9 @@ def main(analysis_dir, num_samples, fingerprint_selection_count, main_language):
         print("self SIM " + line[0] + " " + str(self_sims))
         print("specific " + line[0] + " " + str(inverse_specificity))
 
-        out_lines_main_sim.append(",".join([str(language_similarities[language]) for language in index]) + "\n")
-        out_lines_self_sim.append(",".join([str(self_sims[language]) for language in index]) + "\n")
-        out_lines_main_spec.append(",".join([str(inverse_specificity[language]) for language in index]) + "\n")
+        out_lines_main_sim.append(f"{line[0]}," + ",".join([str(language_similarities[language]) for language in index]) + "\n")
+        out_lines_self_sim.append(f"{line[0]}," + ",".join([str(self_sims[language]) for language in index]) + "\n")
+        out_lines_main_spec.append(f"{line[0]}," + ",".join([str(inverse_specificity[language]) for language in index]) + "\n")
         
     with open(f"{analysis_dir}/results_{main_language}.csv", "w") as f:
         f.writelines(out_lines_main_sim)
